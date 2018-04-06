@@ -18,3 +18,10 @@ Lite guidelines för projektet
 * Om du behöver skriva längre kommentarer,
 * på flera rader. Gör såhär.
 */
+
+* Ordning för mobbprogrammering: 12 min/person
+1. Camilla
+2. Jimmy
+3. Julia
+4. Micke
+5. Emma   
