@@ -18,10 +18,12 @@ const jobs = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/');
 jobs.fetchAll()
 .then(jobs => {
     View.displayJobs(jobs);
+    View.displayNumberOfJobs(jobs);
 });
 
 const View = (function(){
     const wrapper = document.getElementById('wrapper');
+    const numberOfJobsWrapper = document.getElementById('numberOfJobs');
 
      return {
         // View 10 latest ads
@@ -29,7 +31,6 @@ const View = (function(){
             jobs = jobs.matchningslista.matchningdata;
             let jobInfo = ``;
             for(let job of jobs){
-                
                 
                 jobInfo += `<div class="job-wrapper">
                 <h2>${job.annonsrubrik}</h2>
@@ -42,6 +43,13 @@ const View = (function(){
                 </div>`;
             }
             wrapper.innerHTML = jobInfo;
+        },
+
+        displayNumberOfJobs: function(jobs) {
+            totalJobs = jobs.matchningslista.antal_platsannonser;
+            let jobInfo = ``;
+               jobInfo = `<h2>${totalJobs}</h2>`;
+               numberOfJobsWrapper.innerHTML = jobInfo;
         }
      }
 }());
