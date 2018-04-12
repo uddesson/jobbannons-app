@@ -93,7 +93,7 @@ const View = (function(){
                 <p>Sista ansökningsdag: ${shortenedDate}</p>
                 <p>Yrkesbenämning: ${job.yrkesbenamning}</p>
                 <p>Anställningstyp: ${job.anstallningstyp}</p>
-                <p>${job.annonsurl}</p>
+                <a href="${job.annonsurl}">Länk till annons</a><br>
                 <button class="saveAd" data-id="${job.annonsid}">Spara annons</button>
                 <button class="showAd" data-id="${job.annonsid}">Visa annons</button>
                 </div>`;
@@ -122,7 +122,7 @@ const View = (function(){
                 <h3>Kommun: ${job.annons.kommunnamn}</h3>
                 <p>${job.annons.annonstext.replace(/(\r\n|\n|\r)/gm, '<br />')}</p>
                 <button id="shareButton">Dela annons</button>
-                <div id="linkContainer" class="hidden">${job.annons.platsannonsUrl}</div>
+                <div id="linkContainer" class="hidden">Länk till annons: <a href="${job.annons.platsannonsUrl}">${job.annons.platsannonsUrl}</a></div>
                 </div>`;
 
             wrapper.innerHTML = jobInfo;
