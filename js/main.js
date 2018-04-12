@@ -45,21 +45,25 @@ const Controller = (function (){
 
     return {
         bindHomePageEventListeners: function(){
-            const showAdButtons = document.querySelectorAll('button.showAd');
-
-            for (let button of showAdButtons){ 
-                let adId = button.dataset.id;
-                button.addEventListener('click', function(){
-                    Model.handleSingleJob(adId);
-                });
+            const allButtons = document.querySelectorAll('button');
+            for(button of allButtons){
+                if(button.classList.contains('showAd')){
+                    let adId = button.dataset.id;
+                    button.addEventListener('click', function(){
+                        Model.handleSingleJob(adId);
+                    });
+                }
+                if(button.classList.contains('saveAd')){
+                    // Save ad
+                }
             }
         },
+        
         bindSingleJobPageEventListeners: function(){
             const homeButton = document.getElementById('back');
             homeButton.addEventListener('click', Model.handleAllJobs);
         }
     }
-    
 })();
 
 
