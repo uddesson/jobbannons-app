@@ -14,9 +14,10 @@ class Fetch {
 
 const jobs = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/');
 
-const FetchModel = (function(){
-    return{
-        fetchAllJobs: function(){
+const Model = (function(){
+
+    return {
+        handleAllJobs: function(){
             jobs.fetchAll()
             .then(jobs => {
                 View.displayJobs(jobs);
@@ -24,7 +25,7 @@ const FetchModel = (function(){
             });
         },
         
-        fetchSingleJob: function(id){
+        handleSingleJob: function(id){
             jobs.fetchOne(id)
             .then(job => {
                 View.displayOneJob(job);
@@ -32,6 +33,24 @@ const FetchModel = (function(){
         }
     }
 }());
+
+
+const Controller = (function (){ 
+
+    return {
+        createEventListener: function(){
+            const showAdButtons = document.querySelectorAll('button.showAd');
+
+            for (let button of showAdButtons){ 
+                let adId = button.dataset.id;
+                button.addEventListener('click', function(){
+                    Model.handleSingleJob(adId);
+                });
+            }
+        }
+    }
+    
+})();
 
 
 const View = (function(){
@@ -58,6 +77,7 @@ const View = (function(){
                 </div>`;
             }
             wrapper.innerHTML = jobInfo;
+            Controller.createEventListener();
         },
 
         // Shows total number of jobs in Stockholm county
@@ -83,9 +103,9 @@ const View = (function(){
 
             wrapper.innerHTML = jobInfo;
             var backButton = document.getElementById('back');
-            backButton.addEventListener('click', FetchModel.fetchAllJobs);
+            backButton.addEventListener('click', Model.handleAllJobs);
         }
      }
 }());
 
-FetchModel.fetchSingleJob('7665589');
+Model.handleAllJobs();
