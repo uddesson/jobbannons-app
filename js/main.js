@@ -62,6 +62,7 @@ const Controller = (function (){
     return {
         bindHomePageEventListeners: function(){
             const allButtons = document.querySelectorAll('button');
+
             for(button of allButtons){
                 if(button.classList.contains('showAd')){
                     let adID = button.dataset.id;
@@ -69,17 +70,26 @@ const Controller = (function (){
                         Model.handleSingleJob(adID);
                     });
                 }
+
                 if(button.classList.contains('saveAd')){
                     let adID = button.dataset.id;
+                    
                     button.addEventListener('click', function(){
                         // We push the clicked ad into our locally stored ads
                         let myAds = Model.getLocallyStoredAds();
                         myAds.push(adID);           
                         Model.storeAdsInLocalStorage(myAds);
-                        console.log(Model.getLocallyStoredAds())     
+                        console.log(Model.getLocallyStoredAds())  
                     });
                 }
             }
+            
+            const displaySavedAds = document.getElementById('displaySavedAds');
+
+            displaySavedAds.addEventListener('click', function(){
+                let myAds = Model.getLocallyStoredAds();
+                View.displaySavedAds(myAds);
+            });
         },
 
         bindSingleJobPageEventListeners: function(){
@@ -149,6 +159,16 @@ const View = (function(){
 
             wrapper.innerHTML = jobInfo;
             Controller.bindSingleJobPageEventListeners();
+        },
+
+        displaySavedAds: function(myAds){
+            savedAdsList = document.getElementById('savedAdsList');
+
+            for (var ad of myAds){
+                let listElement = document.createElement('li');
+                listElement.innerText = ad;
+                savedAdsList.appendChild(listElement);
+            }
         },
 
         toggleClassHidden: function(element){
