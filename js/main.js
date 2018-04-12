@@ -7,7 +7,8 @@ class Fetch {
         .then((response) => response.json())
     }
     fetchOne(id){
-
+        return fetch(this.baseUrl + id)
+        .then((response) => response.json())
     }
 }
 
@@ -18,6 +19,13 @@ jobs.fetchAll()
     View.displayNumberOfJobs(jobs);
 });
 
+
+jobs.fetchOne('7665589')
+.then(job => {
+    View.displayOneJob(job);
+});
+
+
 const View = (function(){
     const wrapper = document.getElementById('wrapper');
     const numberOfJobsWrapper = document.getElementById('numberOfJobs');
@@ -27,6 +35,7 @@ const View = (function(){
         displayJobs: function(jobs) {
             jobs = jobs.matchningslista.matchningdata;
             let jobInfo = ``;
+
             for(let job of jobs){
                 jobInfo += `<div id="${job.annonsid}" class="job-wrapper">
                 <h2>${job.annonsrubrik}</h2>
@@ -37,6 +46,7 @@ const View = (function(){
                 <p>Anställningstyp: ${job.anstallningstyp}</p>
                 <p>${job.annonsurl}</p>
                 <button id="saveAd">Spara annons</button>
+                <button id="showAd">Visa annons</button>
                 </div>`;
             }
             wrapper.innerHTML = jobInfo;
@@ -45,10 +55,24 @@ const View = (function(){
         // Shows total number of jobs in Stockholm county
         displayNumberOfJobs: function(jobs) {
             totalJobs = jobs.matchningslista.antal_platsannonser;
+
             let jobInfo = ``;
                jobInfo = `<h2>Just nu finns ${totalJobs} 
                jobbannonser i Stockholms län</h2>`;
                numberOfJobsWrapper.innerHTML = jobInfo;
+        },
+        
+        displayOneJob: function(job){
+            job = job.platsannons;
+
+            let jobInfo = ``;
+                jobInfo += `<div id="${job.annons.annonsid}" class="single-job-wrapper">
+                <h2>${job.annons.annonsrubrik}</h2>
+                <h3>Kommun: ${job.annons.kommunnamn}</h3>
+                <p>${job.annons.annonstext.replace(/(\r\n|\n|\r)/gm, '<br />')}</p>
+                </div>`;
+
+             wrapper.innerHTML = jobInfo;
         }
      }
 }());
