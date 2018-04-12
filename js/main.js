@@ -15,7 +15,7 @@ class Fetch {
 const jobs = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/');
 
 const Model = (function(){
-
+   
     return {
         handleAllJobs: function(){
             jobs.fetchAll()
@@ -34,27 +34,50 @@ const Model = (function(){
 
         shortenDate: function(date){
             return date.substring(0,10);
+        },
+
+        storeAdsInLocalStorage: function(myAds){
+            //Save the input (the array of ads) as strings in localStorage
+            localStorage.setItem("myAds", JSON.stringify(myAds));
+        },
+
+        getLocallyStoredAds: function(){ 
+            //Fetch array from local storage
+            var storedAds = localStorage.getItem("myAds");
+        
+            //If there are no saved ads
+            if (storedAds == null){
+                //Define an empty array, otherwise the user won't be able to push anything into it
+                return [];
+            } else {
+                //Turn array back from string to regular array - and return it
+                return JSON.parse(storedAds); 
+            }
         }
-        
-        
     }
 }());
 
-
 const Controller = (function (){ 
-
+    
     return {
         bindHomePageEventListeners: function(){
             const allButtons = document.querySelectorAll('button');
             for(button of allButtons){
                 if(button.classList.contains('showAd')){
-                    let adId = button.dataset.id;
+                    let adID = button.dataset.id;
                     button.addEventListener('click', function(){
-                        Model.handleSingleJob(adId);
+                        Model.handleSingleJob(adID);
                     });
                 }
                 if(button.classList.contains('saveAd')){
-                    // Save ad
+                    let adID = button.dataset.id;
+                    button.addEventListener('click', function(){
+                        // We push the clicked ad into our locally stored ads
+                        let myAds = Model.getLocallyStoredAds();
+                        myAds.push(adID);           
+                        Model.storeAdsInLocalStorage(myAds);
+                        console.log(Model.getLocallyStoredAds())     
+                    });
                 }
             }
         },
@@ -72,7 +95,6 @@ const Controller = (function (){
     }
 })();
 
-
 const View = (function(){
     const wrapper = document.getElementById('wrapper');
     const numberOfJobsWrapper = document.getElementById('numberOfJobs');
@@ -89,9 +111,9 @@ const View = (function(){
                 jobInfo += `<div class="job-wrapper">
                 <h2>${job.annonsrubrik}</h2>
                 <p>Arbetsplats: ${job.arbetsplatsnamn}</p>
-                <p>Plats: ${job.kommunnamn}</p>
+                <p>Kommun: ${job.kommunnamn}</p>
                 <p>Sista ansökningsdag: ${shortenedDate}</p>
-                <p>Yrkesbenämning: ${job.yrkesbenamning}</p>
+                <p>Yrkesroll: ${job.yrkesbenamning}</p>
                 <p>Anställningstyp: ${job.anstallningstyp}</p>
                 <a href="${job.annonsurl}">Länk till annons</a><br>
                 <button class="saveAd" data-id="${job.annonsid}">Spara annons</button>
