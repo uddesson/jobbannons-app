@@ -30,7 +30,13 @@ const Model = (function(){
             .then(job => {
                 View.displayOneJob(job);
             });
+        },
+
+        shortenDate: function(date){
+            return date.substring(0,10);
         }
+        
+        
     }
 }());
 
@@ -66,13 +72,14 @@ const View = (function(){
         displayJobs: function(jobs) {
             jobs = jobs.matchningslista.matchningdata;
             let jobInfo = ``;
-
+            
             for(let job of jobs){
+                let shortenedDate = Model.shortenDate(job.sista_ansokningsdag);
                 jobInfo += `<div class="job-wrapper">
                 <h2>${job.annonsrubrik}</h2>
                 <p>Arbetsplats: ${job.arbetsplatsnamn}</p>
                 <p>Plats: ${job.kommunnamn}</p>
-                <p>Sista ansökningsdag: ${job.sista_ansokningsdag}</p>
+                <p>Sista ansökningsdag: ${shortenedDate}</p>
                 <p>Yrkesbenämning: ${job.yrkesbenamning}</p>
                 <p>Anställningstyp: ${job.anstallningstyp}</p>
                 <p>${job.annonsurl}</p>
