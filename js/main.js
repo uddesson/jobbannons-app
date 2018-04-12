@@ -38,7 +38,7 @@ const Model = (function(){
 const Controller = (function (){ 
 
     return {
-        createEventListener: function(){
+        bindHomePageEventListeners: function(){
             const showAdButtons = document.querySelectorAll('button.showAd');
 
             for (let button of showAdButtons){ 
@@ -47,6 +47,10 @@ const Controller = (function (){
                     Model.handleSingleJob(adId);
                 });
             }
+        },
+        bindSingleJobPageEventListeners: function(){
+            const homeButton = document.getElementById('back');
+            homeButton.addEventListener('click', Model.handleAllJobs);
         }
     }
     
@@ -77,7 +81,7 @@ const View = (function(){
                 </div>`;
             }
             wrapper.innerHTML = jobInfo;
-            Controller.createEventListener();
+            Controller.bindHomePageEventListeners();
         },
 
         // Shows total number of jobs in Stockholm county
@@ -102,8 +106,7 @@ const View = (function(){
                 </div>`;
 
             wrapper.innerHTML = jobInfo;
-            var backButton = document.getElementById('back');
-            backButton.addEventListener('click', Model.handleAllJobs);
+            Controller.bindSingleJobPageEventListeners();
         }
      }
 }());
