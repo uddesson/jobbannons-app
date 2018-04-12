@@ -27,9 +27,21 @@ const View = (function(){
         // View 10 latest ads
         displayJobs: function(jobs) {
             jobs = jobs.matchningslista.matchningdata;
+            let jobInfo = ``;
             for(let job of jobs){
-                console.log(job);
+                
+                
+                jobInfo += `<div class="job-wrapper">
+                <h2>${job.annonsrubrik}</h2>
+                <p>${job.arbetsplatsnamn}</p>
+                <p>${job.kommunnamn}</p>
+                <p>Sista ansökningsdag: ${job.sista_ansokningsdag}</p>
+                <p>Yrkesbenämning: ${job.yrkesbenamning}</p>
+                <p>Anställningstyp: ${job.anstallningstyp}</p>
+                <p>${job.annonsurl}</p>
+                </div>`;
             }
+            wrapper.innerHTML = jobInfo;
         }
      }
 }());
