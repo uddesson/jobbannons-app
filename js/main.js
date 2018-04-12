@@ -58,10 +58,16 @@ const Controller = (function (){
                 }
             }
         },
-        
+
         bindSingleJobPageEventListeners: function(){
-            const homeButton = document.getElementById('back');
+            const homeButton = document.getElementById('returnButton');
             homeButton.addEventListener('click', Model.handleAllJobs);
+
+            const shareButton = document.getElementById('shareButton');
+            const linkContainer = document.getElementById('linkContainer');
+            shareButton.addEventListener('click', function(){
+                View.toggleClassHidden(linkContainer);
+            })
         }
     }
 })();
@@ -78,7 +84,8 @@ const View = (function(){
             let jobInfo = ``;
             
             for(let job of jobs){
-                let shortenedDate = Model.shortenDate(job.sista_ansokningsdag);
+                //let shortenedDate = Model.shortenDate(job.sista_ansokningsdag);
+                let shortenedDate = job.sista_ansokningsdag;
                 jobInfo += `<div class="job-wrapper">
                 <h2>${job.annonsrubrik}</h2>
                 <p>Arbetsplats: ${job.arbetsplatsnamn}</p>
@@ -87,7 +94,7 @@ const View = (function(){
                 <p>Yrkesbenämning: ${job.yrkesbenamning}</p>
                 <p>Anställningstyp: ${job.anstallningstyp}</p>
                 <p>${job.annonsurl}</p>
-                <button class="saveAd">Spara annons</button>
+                <button class="saveAd" data-id="${job.annonsid}">Spara annons</button>
                 <button class="showAd" data-id="${job.annonsid}">Visa annons</button>
                 </div>`;
             }
@@ -110,14 +117,20 @@ const View = (function(){
 
             let jobInfo = ``;
                 jobInfo += `<div id="${job.annons.annonsid}" class="single-job-wrapper">
-                <button id="back">Tillbaka</button>
+                <button id="returnButton">Tillbaka</button>
                 <h2>${job.annons.annonsrubrik}</h2>
                 <h3>Kommun: ${job.annons.kommunnamn}</h3>
                 <p>${job.annons.annonstext.replace(/(\r\n|\n|\r)/gm, '<br />')}</p>
+                <button id="shareButton">Dela annons</button>
+                <div id="linkContainer" class="hidden">${job.annons.platsannonsUrl}</div>
                 </div>`;
 
             wrapper.innerHTML = jobInfo;
             Controller.bindSingleJobPageEventListeners();
+        },
+
+        toggleClassHidden: function(element){
+            element.classList.toggle('hidden');
         }
      }
 }());
