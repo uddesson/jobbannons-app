@@ -1,4 +1,4 @@
-const wrapper = document.getElementById('wrapper');
+
 
 
 class Fetch {
@@ -20,12 +20,16 @@ jobs.fetchAll()
     View.displayJobs(jobs);
 });
 
-const View = {
-    // View 10 latest ads
-    displayJobs: (jobs) => {
-        jobs = jobs.matchningslista.matchningdata;
-        for(let job of jobs){
-            console.log(job);
+const View = (function(){
+    const wrapper = document.getElementById('wrapper');
+
+     return {
+        // View 10 latest ads
+        displayJobs: function(jobs) {
+            jobs = jobs.matchningslista.matchningdata;
+            for(let job of jobs){
+                console.log(job);
+            }
         }
-    }
-}
+     }
+}());
