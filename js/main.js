@@ -44,10 +44,8 @@ const Model = (function(){
         },
 
         getLocallyStoredAds: function(){ 
-            //Fetch array from local storage
             var storedAds = localStorage.getItem("myAds");
         
-            //If there are no saved ads
             if (storedAds == null){
                 //Define an empty array, otherwise the user won't be able to push anything into it
                 return [];
@@ -66,6 +64,7 @@ const Controller = (function (){
             const allButtons = document.querySelectorAll('button');
 
             for(button of allButtons){
+                
                 if(button.classList.contains('showJobAd')){
                     let adID = button.dataset.id;
                     button.addEventListener('click', function(){
@@ -81,7 +80,6 @@ const Controller = (function (){
                         let myAds = Model.getLocallyStoredAds();
                         myAds.push(adID);           
                         Model.storeAdsInLocalStorage(myAds);
-                        console.log(Model.getLocallyStoredAds())  
                     });
                 }
             }
@@ -177,4 +175,5 @@ const View = (function(){
      }
 }());
 
+// Display latest 10 jobs on the front page
 Model.handleAllJobs();
