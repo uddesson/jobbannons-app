@@ -64,7 +64,7 @@ const Controller = (function (){
             const allButtons = document.querySelectorAll('button');
 
             for(button of allButtons){
-                if(button.classList.contains('showAd')){
+                if(button.classList.contains('showJobAd')){
                     let adID = button.dataset.id;
                     button.addEventListener('click', function(){
                         Model.handleSingleJob(adID);
@@ -127,7 +127,7 @@ const View = (function(){
                 <p>Anställningstyp: ${job.anstallningstyp}</p>
                 <a href="${job.annonsurl}">Länk till annons</a><br>
                 <button class="saveAd" data-id="${job.annonsid}">Spara annons</button>
-                <button class="showAd" data-id="${job.annonsid}">Visa annons</button>
+                <button class="showJobAd" data-id="${job.annonsid}">Visa annons</button>
                 </div>`;
             }
             wrapper.innerHTML = jobInfo;
