@@ -71,7 +71,7 @@ const Controller = (function (){
                     });
                 }
 
-                if(button.classList.contains('saveAd')){
+                if(button.classList.contains('saveJobAd')){
                     let adID = button.dataset.id;
                     
                     button.addEventListener('click', function(){
@@ -126,7 +126,7 @@ const View = (function(){
                 <p>Yrkesroll: ${job.yrkesbenamning}</p>
                 <p>Anställningstyp: ${job.anstallningstyp}</p>
                 <a href="${job.annonsurl}">Länk till annons</a><br>
-                <button class="saveAd" data-id="${job.annonsid}">Spara annons</button>
+                <button class="saveJobAd" data-id="${job.annonsid}">Spara annons</button>
                 <button class="showJobAd" data-id="${job.annonsid}">Visa annons</button>
                 </div>`;
             }
