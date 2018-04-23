@@ -20,6 +20,7 @@ const Model = (function(){
         handleAllJobs: function(){
             jobs.fetchAll()
             .then(jobs => {
+                window.location.hash = '';
                 View.displayJobs(jobs);
                 View.displayNumberOfJobs(jobs);
                 Controller.bindHomePageEventListeners();
@@ -29,6 +30,7 @@ const Model = (function(){
         handleSingleJob: function(id){
             jobs.fetchOne(id)
             .then(job => {
+                location.hash = `/annonsid/${id}`;
                 View.displayOneJob(job);
                 Controller.bindSingleJobPageEventListeners();
             });
@@ -53,7 +55,18 @@ const Model = (function(){
                 //Turn array back from string to regular array - and return it
                 return JSON.parse(storedAds); 
             }
+        },
+
+        fetchBasedOnUrl: function(){
+            // TODO: Make this function accept several kinds of url-endpoints
+            const jobAdId = window.location.hash.split(`/`).pop();
+            if (window.location.hash.includes(`#/annonsid`)) {
+                Model.handleSingleJob(jobAdId);
+            } else {
+                Model.handleAllJobs();
+            }
         }
+            
     }
 }());
 
@@ -101,9 +114,16 @@ const Controller = (function (){
             shareButton.addEventListener('click', function(){
                 View.toggleClassHidden(linkContainer);
             })
+        },
+        
+        checkCurrentUrl: function () {
+            window.addEventListener('hashchange', event => {
+                Model.fetchBasedOnUrl();
+            });
         }
     }
 })();
+
 
 const View = (function(){
     const wrapper = document.getElementById('wrapper');
@@ -175,5 +195,5 @@ const View = (function(){
      }
 }());
 
-// Display latest 10 jobs on the front page
-Model.handleAllJobs();
+Controller.checkCurrentUrl();
+Model.fetchBasedOnUrl();
