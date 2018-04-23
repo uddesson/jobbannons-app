@@ -1,9 +1,10 @@
 class Fetch {
-    constructor(baseUrl){
+    constructor(baseUrl, additionalUrlParameters){
         this.baseUrl = baseUrl;
+        this.additionalUrlParameters = additionalUrlParameters;
     }
     fetchAll(){
-        return fetch(this.baseUrl + 'matchning?lanid=1&antalrader=10')
+        return fetch(this.baseUrl + this.additionalUrlParameters)
         .then((response) => response.json())
     }
     fetchOne(id){
@@ -12,7 +13,7 @@ class Fetch {
     }
 }
 
-const jobs = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/');
+const jobs = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/', 'matchning?lanid=1&antalrader=10');
 
 const Model = (function(){
    
@@ -34,6 +35,14 @@ const Model = (function(){
                 View.displayOneJob(job);
                 Controller.bindSingleJobPageEventListeners();
             });
+        },
+
+        handleAllCountys: function(){
+            const countyFetch = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/lan', '')
+            countyFetch.fetchAll()
+            .then((countys) => {
+                View.displayCountyOptions(countys);
+            })
         },
 
         shortenDate: function(date){
@@ -65,8 +74,16 @@ const Model = (function(){
             } else {
                 Model.handleAllJobs();
             }
+        },
+
+        returnSelectLists: function(){
+            const showJobsInCounty = document.getElementById('showJobsInCounty');
+            const showNumberOfJobs = document.getElementById('showNumberOfJobs');
+            let selectedCounty = showJobsInCounty[showJobsInCounty.selectedIndex].value;
+            let selectedNumberOfJobs = showNumberOfJobs[showNumberOfJobs.selectedIndex].value;
+
+            return [showJobsInCounty, selectedCounty, selectedNumberOfJobs];
         }
-            
     }
 }());
 
@@ -113,6 +130,18 @@ const Controller = (function (){
             const linkContainer = document.getElementById('linkContainer');
             shareButton.addEventListener('click', function(){
                 View.toggleClassHidden(linkContainer);
+            })
+        },
+
+        bindFormEventListeners: function(){
+            const submitButton = document.getElementById('showJobsButton');
+            
+            submitButton.addEventListener('click', function(event){
+                event.preventDefault();
+                const selectedCounty = Model.returnSelectLists()[1];
+                const selectedNumber = Model.returnSelectLists()[2];
+                jobs.additionalUrlParameters = `matchning?lanid=${selectedCounty}&antalrader=${selectedNumber}`
+                Model.handleAllJobs();
             })
         },
         
@@ -179,8 +208,20 @@ const View = (function(){
             wrapper.innerHTML = jobInfo;
         },
 
+        displayCountyOptions: function(countys){
+            const showJobsInCounty = Model.returnSelectLists()[0];
+            
+            for(let county of countys.soklista.sokdata) {
+                let countyOption = document.createElement('option');
+                countyOption.innerText = county.namn;
+                countyOption.value = county.id;
+                showJobsInCounty.appendChild(countyOption);
+            }
+        },
+        
+
         displaySavedAds: function(myAds){
-            savedAdsList = document.getElementById('savedAdsList');
+            let savedAdsList = document.getElementById('savedAdsList');
 
             for (var ad of myAds){
                 let listElement = document.createElement('li');
@@ -195,5 +236,7 @@ const View = (function(){
      }
 }());
 
+Model.handleAllCountys();
 Controller.checkCurrentUrl();
 Model.fetchBasedOnUrl();
+Controller.bindFormEventListeners();
