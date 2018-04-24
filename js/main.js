@@ -52,6 +52,14 @@ const Model = (function(){
             })
         },
 
+        handleAllJobCategories: function(){
+            const categoriesFetch = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/yrkesomraden', '');
+            categoriesFetch.fetchAll()
+            .then((categories) => {
+                View.displayJobCategories(categories);
+            })
+        },
+
         shortenDate: function(date){
             return date.substring(0,10);
         },
@@ -215,6 +223,7 @@ const View = (function(){
     const wrapper = document.getElementById('wrapper');
     const numberOfJobsWrapper = document.getElementById('numberOfJobs');
     const paginationDiv = document.getElementById('pagination');
+    const jobCategoriesDiv = document.getElementById('jobCategories');
 
      return {
         // View 10 latest ads
@@ -305,8 +314,17 @@ const View = (function(){
             previousPage.innerText = "Föregående";
             
             paginationDiv.appendChild(previousPage);
-            
             paginationDiv.appendChild(nextPage);
+        },
+        
+        displayJobCategories: function(categories){
+            let categoryList = ""
+
+            for(let category of categories.soklista.sokdata){ 
+                categoryList += `<li data-id="${category.id}">${category.namn} (Lediga jobb: ${category.antal_ledigajobb})</li>`
+            }
+
+            jobCategoriesDiv.innerHTML = categoryList;
         },
 
         emptyNumberOfJobsWrapper: function(){
@@ -319,3 +337,4 @@ Model.handleAllCountys();
 Controller.checkCurrentUrl();
 Model.fetchBasedOnUrl();
 Controller.bindFormEventListeners();
+Model.handleAllJobCategories();
