@@ -21,6 +21,7 @@ const Model = (function(){
         handleAllJobs: function(){
             jobs.fetchAll()
             .then(jobs => {
+                console.log(jobs)
                 window.location.hash = `sida=${pageNumber}`;
                 View.displayJobs(jobs);
                 View.displayNumberOfJobs(jobs);
@@ -75,9 +76,13 @@ const Model = (function(){
             if (window.location.hash.includes(`#/annonsid`)) {
                 Model.handleSingleJob(jobAdId);
             } else {
-                // location.hash = '&sida=1';
                 Model.handleAllJobs();
             }
+        },
+
+        fetchBasedOnSearch: function(searchQuery){
+            jobs.additionalUrlParameters = `matchning?nyckelord=${searchQuery}`;
+            Model.handleAllJobs();
         },
 
         returnSelectLists: function(){
@@ -85,6 +90,7 @@ const Model = (function(){
             const showNumberOfJobs = document.getElementById('showNumberOfJobs');
             let selectedCounty = showJobsInCounty[showJobsInCounty.selectedIndex].value;
             let selectedNumberOfJobs = showNumberOfJobs[showNumberOfJobs.selectedIndex].value;
+
             // Set to Stockholm county number by default
             if(selectedCounty === "-"){
                  selectedCounty = 1;
@@ -95,7 +101,7 @@ const Model = (function(){
         setCustomFetchPath: function(){
             const selectedCounty = Model.returnSelectLists()[1];
             const selectedNumber = Model.returnSelectLists()[2];
-            jobs.additionalUrlParameters = `matchning?lanid=${selectedCounty}&antalrader=${selectedNumber}`
+            jobs.additionalUrlParameters = `matchning?lanid=${selectedCounty}&antalrader=${selectedNumber}`;
         },
 
         nextOrPreviousPage: function(state){
@@ -164,11 +170,19 @@ const Controller = (function (){
 
         bindFormEventListeners: function(){
             const submitButton = document.getElementById('showJobsButton');
+            const searchButton = document.getElementById('searchButton');
+            const searchBar = document.getElementById('searchBar');
             
             submitButton.addEventListener('click', function(event){
                 event.preventDefault();
                 Model.setCustomFetchPath();
                 Model.handleAllJobs();
+            })
+
+            searchButton.addEventListener('click', function(event){
+                event.preventDefault();
+                let searchQuery = searchBar.value; 
+                Model.fetchBasedOnSearch(searchQuery);
             })
         },
 
