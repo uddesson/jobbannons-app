@@ -16,18 +16,22 @@ class Fetch {
 const jobs = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/', 'matchning?lanid=1&antalrader=10');
 
 const Model = (function(){
-   let pageNumber = 1;
+    let pageNumber = 1;
+    let searchState = false;
+
     return {
         handleAllJobs: function(){
             jobs.fetchAll()
             .then(jobs => {
-                console.log(jobs)
                 window.location.hash = `sida=${pageNumber}`;
                 View.displayJobs(jobs);
-                View.displayNumberOfJobs(jobs);
                 Controller.bindHomePageEventListeners();
                 View.displayPagination();
                 Controller.bindPaginationEventListeners();
+                View.displayNumberOfJobs(jobs);
+                if(searchState){
+                    View.emptyNumberOfJobsWrapper();
+                }
             });
         },
         
@@ -81,8 +85,9 @@ const Model = (function(){
         },
 
         fetchBasedOnSearch: function(searchQuery){
+            searchState = true;
             jobs.additionalUrlParameters = `matchning?nyckelord=${searchQuery}`;
-            Model.handleAllJobs();
+            Model.handleAllJobs(); 
         },
 
         returnSelectLists: function(){
@@ -116,9 +121,10 @@ const Model = (function(){
                 pageNumber --;
             }
             jobs.additionalUrlParameters = `matchning?lanid=${selectedCounty}&antalrader=${selectedNumber}&sida=${pageNumber}`;
-            Model.handleAllJobs();
-            
+            Model.handleAllJobs();   
         }
+
+
     }
 }());
 
@@ -237,7 +243,6 @@ const View = (function(){
             wrapper.innerHTML = jobInfo;
         },
 
-        // Shows total number of jobs in Stockholm county
         displayNumberOfJobs: function(jobs) {
             let totalJobs = jobs.matchningslista.antal_platsannonser;
             let county = jobs.matchningslista.matchningdata[0].lan;
@@ -307,6 +312,11 @@ const View = (function(){
             
             paginationDiv.appendChild(nextPage);
 
+        },
+
+        emptyNumberOfJobsWrapper: function(){
+            numberOfJobsWrapper.innerHTML = "";
+            
         }
      }
 }());
