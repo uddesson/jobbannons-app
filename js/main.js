@@ -25,6 +25,7 @@ const Model = (function(){
                 View.displayJobs(jobs);
                 View.displayNumberOfJobs(jobs);
                 Controller.bindHomePageEventListeners();
+                View.displayPagination();
             });
         },
         
@@ -157,6 +158,7 @@ const Controller = (function (){
 const View = (function(){
     const wrapper = document.getElementById('wrapper');
     const numberOfJobsWrapper = document.getElementById('numberOfJobs');
+    const paginationDiv = document.getElementById('pagination');
 
      return {
         // View 10 latest ads
@@ -194,6 +196,7 @@ const View = (function(){
 
         displayOneJob: function(job){
             job = job.platsannons;
+            paginationDiv.innerHTML = "";
 
             let jobInfo = ``;
                 jobInfo += `<div id="${job.annons.annonsid}" class="single-job-wrapper">
@@ -232,6 +235,23 @@ const View = (function(){
 
         toggleClassHidden: function(element){
             element.classList.toggle('hidden');
+        },
+
+        displayPagination: function(){   
+            paginationDiv.innerHTML = "";
+
+            const nextPage = document.createElement('p');
+            const previousPage = document.createElement('p');
+            
+            nextPage.id = "nextPage";
+            previousPage.id = "previousPage";
+
+            nextPage.innerText = "Nästa";
+            previousPage.innerText = "Föregående";
+
+            paginationDiv.appendChild(previousPage);
+            paginationDiv.appendChild(nextPage);
+
         }
      }
 }());
