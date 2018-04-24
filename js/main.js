@@ -186,11 +186,12 @@ const View = (function(){
 
         // Shows total number of jobs in Stockholm county
         displayNumberOfJobs: function(jobs) {
-            totalJobs = jobs.matchningslista.antal_platsannonser;
+            let totalJobs = jobs.matchningslista.antal_platsannonser;
+            let county = jobs.matchningslista.matchningdata[0].lan;
 
             let jobInfo = ``;
                jobInfo = `<h2>Just nu finns ${totalJobs} 
-               jobbannonser i Stockholms län</h2>`;
+               jobbannonser i ${county}</h2>`;
                numberOfJobsWrapper.innerHTML = jobInfo;
         },
 
@@ -242,7 +243,7 @@ const View = (function(){
 
             const nextPage = document.createElement('p');
             const previousPage = document.createElement('p');
-            
+
             nextPage.id = "nextPage";
             previousPage.id = "previousPage";
 
