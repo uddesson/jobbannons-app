@@ -16,16 +16,17 @@ class Fetch {
 const jobs = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/', 'matchning?lanid=1&antalrader=10');
 
 const Model = (function(){
-   
+   let pageNumber = 1;
     return {
         handleAllJobs: function(){
             jobs.fetchAll()
             .then(jobs => {
-                window.location.hash = '';
+                window.location.hash = `sida=${pageNumber}`;
                 View.displayJobs(jobs);
                 View.displayNumberOfJobs(jobs);
                 Controller.bindHomePageEventListeners();
                 View.displayPagination();
+                Controller.bindPaginationEventListeners();
             });
         },
         
@@ -70,9 +71,11 @@ const Model = (function(){
         fetchBasedOnUrl: function(){
             // TODO: Make this function accept several kinds of url-endpoints
             const jobAdId = window.location.hash.split(`/`).pop();
+
             if (window.location.hash.includes(`#/annonsid`)) {
                 Model.handleSingleJob(jobAdId);
             } else {
+                // location.hash = '&sida=1';
                 Model.handleAllJobs();
             }
         },
@@ -82,8 +85,33 @@ const Model = (function(){
             const showNumberOfJobs = document.getElementById('showNumberOfJobs');
             let selectedCounty = showJobsInCounty[showJobsInCounty.selectedIndex].value;
             let selectedNumberOfJobs = showNumberOfJobs[showNumberOfJobs.selectedIndex].value;
-
+            // Set to Stockholm county number by default
+            if(selectedCounty === "-"){
+                 selectedCounty = 1;
+            }
             return [showJobsInCounty, selectedCounty, selectedNumberOfJobs];
+        },
+
+        setCustomFetchPath: function(){
+            const selectedCounty = Model.returnSelectLists()[1];
+            const selectedNumber = Model.returnSelectLists()[2];
+            jobs.additionalUrlParameters = `matchning?lanid=${selectedCounty}&antalrader=${selectedNumber}`
+        },
+
+        nextOrPreviousPage: function(state){
+            
+            const selectedCounty = Model.returnSelectLists()[1];
+            const selectedNumber = Model.returnSelectLists()[2];
+            
+            if(state === "next"){
+                pageNumber ++;
+            }
+            if(state === "previous" && pageNumber > 1){
+                pageNumber --;
+            }
+            jobs.additionalUrlParameters = `matchning?lanid=${selectedCounty}&antalrader=${selectedNumber}&sida=${pageNumber}`;
+            Model.handleAllJobs();
+            
         }
     }
 }());
@@ -139,11 +167,22 @@ const Controller = (function (){
             
             submitButton.addEventListener('click', function(event){
                 event.preventDefault();
-                const selectedCounty = Model.returnSelectLists()[1];
-                const selectedNumber = Model.returnSelectLists()[2];
-                jobs.additionalUrlParameters = `matchning?lanid=${selectedCounty}&antalrader=${selectedNumber}`
+                Model.setCustomFetchPath();
                 Model.handleAllJobs();
             })
+        },
+
+        bindPaginationEventListeners: function(){
+            const nextPage = document.getElementById('nextPage');
+            const previousPage = document.getElementById('previousPage');
+
+            nextPage.addEventListener('click', () => {
+                Model.nextOrPreviousPage("next");
+            });
+
+            previousPage.addEventListener('click', () => {
+                Model.nextOrPreviousPage("previous");
+            });
         },
         
         checkCurrentUrl: function () {
@@ -249,8 +288,9 @@ const View = (function(){
 
             nextPage.innerText = "Nästa";
             previousPage.innerText = "Föregående";
-
+            
             paginationDiv.appendChild(previousPage);
+            
             paginationDiv.appendChild(nextPage);
 
         }
