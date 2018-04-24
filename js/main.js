@@ -123,8 +123,6 @@ const Model = (function(){
             jobs.additionalUrlParameters = `matchning?lanid=${selectedCounty}&antalrader=${selectedNumber}&sida=${pageNumber}`;
             Model.handleAllJobs();   
         }
-
-
     }
 }());
 
@@ -133,6 +131,7 @@ const Controller = (function (){
     return {
         bindHomePageEventListeners: function(){
             const allButtons = document.querySelectorAll('button');
+            const displaySavedAds = document.getElementById('displaySavedAds');
 
             for(button of allButtons){
                 
@@ -154,8 +153,6 @@ const Controller = (function (){
                     });
                 }
             }
-            
-            const displaySavedAds = document.getElementById('displaySavedAds');
 
             displaySavedAds.addEventListener('click', function(){
                 let myAds = Model.getLocallyStoredAds();
@@ -165,31 +162,32 @@ const Controller = (function (){
 
         bindSingleJobPageEventListeners: function(){
             const homeButton = document.getElementById('returnButton');
-            homeButton.addEventListener('click', Model.handleAllJobs);
-
             const shareButton = document.getElementById('shareButton');
             const linkContainer = document.getElementById('linkContainer');
+
+            homeButton.addEventListener('click', Model.handleAllJobs);
+
             shareButton.addEventListener('click', function(){
                 View.toggleClassHidden(linkContainer);
-            })
+            });
         },
 
         bindFormEventListeners: function(){
-            const submitButton = document.getElementById('showJobsButton');
+            const showJobsButton = document.getElementById('showJobsButton');
             const searchButton = document.getElementById('searchButton');
             const searchBar = document.getElementById('searchBar');
             
-            submitButton.addEventListener('click', function(event){
+            showJobsButton.addEventListener('click', function(event){
                 event.preventDefault();
                 Model.setCustomFetchPath();
                 Model.handleAllJobs();
-            })
+            });
 
             searchButton.addEventListener('click', function(event){
                 event.preventDefault();
                 let searchQuery = searchBar.value; 
                 Model.fetchBasedOnSearch(searchQuery);
-            })
+            });
         },
 
         bindPaginationEventListeners: function(){
@@ -212,7 +210,6 @@ const Controller = (function (){
         }
     }
 })();
-
 
 const View = (function(){
     const wrapper = document.getElementById('wrapper');
@@ -281,7 +278,6 @@ const View = (function(){
             }
         },
         
-
         displaySavedAds: function(myAds){
             let savedAdsList = document.getElementById('savedAdsList');
 
@@ -311,12 +307,10 @@ const View = (function(){
             paginationDiv.appendChild(previousPage);
             
             paginationDiv.appendChild(nextPage);
-
         },
 
         emptyNumberOfJobsWrapper: function(){
             numberOfJobsWrapper.innerHTML = "";
-            
         }
      }
 }());
