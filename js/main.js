@@ -140,6 +140,7 @@ const Controller = (function (){
         bindHomePageEventListeners: function(){
             const allButtons = document.querySelectorAll('button');
             const displaySavedAds = document.getElementById('displaySavedAds');
+            const jobCategories = document.querySelectorAll('.job-category');
 
             for(button of allButtons){
                 
@@ -166,6 +167,14 @@ const Controller = (function (){
                 let myAds = Model.getLocallyStoredAds();
                 View.displaySavedAds(myAds);
             });
+
+            for(let category of jobCategories){
+                category.addEventListener('click', function(){
+                    let categoryId = this.dataset.id;
+                    jobs.additionalUrlParameters = `matchning?yrkesomradeid=${categoryId}`;
+                    Model.handleAllJobs();
+                });
+            }
         },
 
         bindSingleJobPageEventListeners: function(){
@@ -316,12 +325,12 @@ const View = (function(){
             paginationDiv.appendChild(previousPage);
             paginationDiv.appendChild(nextPage);
         },
-        
+
         displayJobCategories: function(categories){
             let categoryList = ""
 
             for(let category of categories.soklista.sokdata){ 
-                categoryList += `<li data-id="${category.id}">${category.namn} (Lediga jobb: ${category.antal_ledigajobb})</li>`
+                categoryList += `<li class="job-category" data-id="${category.id}">${category.namn} (Lediga jobb: ${category.antal_ledigajobb})</li>`
             }
 
             jobCategoriesDiv.innerHTML = categoryList;
