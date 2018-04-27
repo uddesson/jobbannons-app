@@ -320,7 +320,9 @@ const View = (function(){
             paginationDiv.innerHTML = "";
 
             const nextPage = document.createElement('p');
+            nextPage.classList.add('col-6');
             const previousPage = document.createElement('p');
+            nextPage.classList.add('col-6');
 
             nextPage.id = "nextPage";
             previousPage.id = "previousPage";

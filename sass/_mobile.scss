@@ -2,6 +2,10 @@ body{
     padding: 40px 50px 40px 50px;
 }
 
+input[type=submit], button:hover{
+    cursor: pointer;
+}
+
 .job-wrapper{
     padding: 20px 0 20px 0;
 }
@@ -9,6 +13,13 @@ body{
 .job-category{
     
     &:hover{
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+
+.pagination-wrapper{
+    p{
         text-decoration: underline;
         cursor: pointer;
     }
