@@ -215,10 +215,12 @@ const Controller = (function (){
 
             nextPage.addEventListener('click', () => {
                 Model.nextOrPreviousPage("next");
+                window.scrollTo(0, 0);
             });
 
             previousPage.addEventListener('click', () => {
                 Model.nextOrPreviousPage("previous");
+                window.scrollTo(0, 0);
             });
         },
         
