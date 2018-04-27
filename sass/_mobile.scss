@@ -1,8 +1,16 @@
+$primary-blue: #007bff;
+
 body{
     margin: 0px;
 }
 
-input[type=submit], button:hover{
+header{
+    padding: 50px 0 20px 0;
+    margin-bottom: 20px;
+    background-color: lighten($primary-blue, 40%);
+}
+
+input[type=submit], button:hover, a{
     cursor: pointer;
 }
 
@@ -10,7 +18,12 @@ input[type=submit], button:hover{
     padding: 20px 0 20px 0;
 }
 
+.sidebar{
+    padding-top: 20px;
+}
+
 .job-category{ 
+
     &:hover{
         text-decoration: underline;
         cursor: pointer;
