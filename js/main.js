@@ -16,19 +16,21 @@ class Fetch {
 const jobs = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/', 'matchning?lanid=1&antalrader=10');
 
 const Model = (function(){
-    let pageNumber = 1;
-    let searchState = false;
+    let pageNumber = 1; // Default value for pagination
+    let searchState = false; // Default value, view differs when set to true (user is searching)
 
     return {
         handleAllJobs: function(){
             jobs.fetchAll()
             .then(jobs => {
                 window.location.hash = `sida=${pageNumber}`;
+
                 View.displayJobs(jobs);
                 Controller.bindHomePageEventListeners();
                 View.displayPagination();
                 Controller.bindPaginationEventListeners();
                 View.displayNumberOfJobs(jobs);
+                
                 if(searchState){
                     View.emptyNumberOfJobsWrapper();
                 }
@@ -39,6 +41,7 @@ const Model = (function(){
             jobs.fetchOne(id)
             .then(job => {
                 location.hash = `/annonsid/${id}`;
+
                 View.displayOneJob(job);
                 Controller.bindSingleJobPageEventListeners();
             });
@@ -118,7 +121,6 @@ const Model = (function(){
         },
 
         nextOrPreviousPage: function(state){
-            
             const selectedCounty = Model.returnSelectLists()[1];
             const selectedNumber = Model.returnSelectLists()[2];
             
@@ -292,6 +294,7 @@ const View = (function(){
                 let countyOption = document.createElement('option');
                 countyOption.innerText = county.namn;
                 countyOption.value = county.id;
+
                 showJobsInCounty.appendChild(countyOption);
             }
         },
@@ -302,6 +305,7 @@ const View = (function(){
             for (var ad of myAds){
                 let listElement = document.createElement('li');
                 listElement.innerText = ad;
+
                 savedAdsList.appendChild(listElement);
             }
         },
