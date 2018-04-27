@@ -6,6 +6,14 @@ body{
     padding: 20px 0 20px 0;
 }
 
+.job-category{
+    
+    &:hover{
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+
 .hidden {
     display: none;
 }
