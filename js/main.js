@@ -255,8 +255,8 @@ const View = (function(){
                 <p>Yrkesroll: ${job.yrkesbenamning}</p>
                 <p>Anställningstyp: ${job.anstallningstyp}</p>
                 <a href="${job.annonsurl}">Länk till annons</a><br>
-                <button class="saveJobAd" data-id="${job.annonsid}">Spara annons</button>
-                <button class="showJobAd" data-id="${job.annonsid}">Visa annons</button>
+                <button class="saveJobAd btn btn-primary" data-id="${job.annonsid}">Spara annons</button>
+                <button class="showJobAd btn btn-primary" data-id="${job.annonsid}">Visa annons</button>
                 </div>`;
             }
             wrapper.innerHTML = jobInfo;
@@ -278,11 +278,11 @@ const View = (function(){
 
             let jobInfo = ``;
                 jobInfo += `<div id="${job.annons.annonsid}" class="single-job-wrapper">
-                <button id="returnButton">Tillbaka</button>
+                <button id="returnButton" class="btn btn-primary">Tillbaka</button>
                 <h2>${job.annons.annonsrubrik}</h2>
                 <h3>Kommun: ${job.annons.kommunnamn}</h3>
                 <p>${job.annons.annonstext.replace(/(\r\n|\n|\r)/gm, '<br />')}</p>
-                <button id="shareButton">Dela annons</button>
+                <button id="shareButton" class="btn btn-primary">Dela annons</button>
                 <div id="linkContainer" class="hidden">Länk till annons: <a href="${job.annons.platsannonsUrl}">${job.annons.platsannonsUrl}</a></div>
                 </div>`;
 
