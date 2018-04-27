@@ -1,5 +1,5 @@
 body{
-    padding: 40px 50px 40px 50px;
+    margin: 0px;
 }
 
 input[type=submit], button:hover{
@@ -10,8 +10,7 @@ input[type=submit], button:hover{
     padding: 20px 0 20px 0;
 }
 
-.job-category{
-    
+.job-category{ 
     &:hover{
         text-decoration: underline;
         cursor: pointer;

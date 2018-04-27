@@ -32,7 +32,7 @@ const Model = (function(){
                 View.displayNumberOfJobs(jobs);
                 
                 if(searchState){
-                    View.emptyNumberOfJobsWrapper();
+                    View.emptyNumberOfJobsContainer();
                 }
             });
         },
@@ -233,7 +233,7 @@ const Controller = (function (){
 })();
 
 const View = (function(){
-    const container = document.getElementById('container');
+    const container = document.getElementById('container-inner');
     const numberOfJobsContainer = document.getElementById('numberOfJobs');
     const paginationDiv = document.getElementById('pagination');
     const jobCategoriesDiv = document.getElementById('jobCategories');
@@ -322,7 +322,7 @@ const View = (function(){
             const nextPage = document.createElement('p');
             nextPage.classList.add('col-6');
             const previousPage = document.createElement('p');
-            nextPage.classList.add('col-6');
+            previousPage.classList.add('col-6');
 
             nextPage.id = "nextPage";
             previousPage.id = "previousPage";
@@ -345,7 +345,7 @@ const View = (function(){
         },
 
         emptyNumberOfJobsContainer: function(){
-            numberOfJobsWrapper.innerHTML = "";
+            numberOfJobsContainer.innerHTML = "";
         }
      }
 }());
