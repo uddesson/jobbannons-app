@@ -233,8 +233,8 @@ const Controller = (function (){
 })();
 
 const View = (function(){
-    const wrapper = document.getElementById('wrapper');
-    const numberOfJobsWrapper = document.getElementById('numberOfJobs');
+    const container = document.getElementById('container');
+    const numberOfJobsContainer = document.getElementById('numberOfJobs');
     const paginationDiv = document.getElementById('pagination');
     const jobCategoriesDiv = document.getElementById('jobCategories');
 
@@ -247,7 +247,7 @@ const View = (function(){
             for(let job of jobs){
                 //let shortenedDate = Model.shortenDate(job.sista_ansokningsdag);
                 let shortenedDate = job.sista_ansokningsdag;
-                jobInfo += `<div class="job-wrapper">
+                jobInfo += `<div class="job-container">
                 <h2>${job.annonsrubrik}</h2>
                 <p>Arbetsplats: ${job.arbetsplatsnamn}</p>
                 <p>Kommun: ${job.kommunnamn}</p>
@@ -259,7 +259,7 @@ const View = (function(){
                 <button class="showJobAd btn btn-primary" data-id="${job.annonsid}">Visa annons</button>
                 </div>`;
             }
-            wrapper.innerHTML = jobInfo;
+            container.innerHTML = jobInfo;
         },
 
         displayNumberOfJobs: function(jobs) {
@@ -269,7 +269,7 @@ const View = (function(){
             let jobInfo = ``;
                jobInfo = `<h2>Just nu finns ${totalJobs} 
                jobbannonser i ${county}</h2>`;
-               numberOfJobsWrapper.innerHTML = jobInfo;
+               numberOfJobsContainer.innerHTML = jobInfo;
         },
 
         displayOneJob: function(job){
@@ -277,7 +277,7 @@ const View = (function(){
             paginationDiv.innerHTML = "";
 
             let jobInfo = ``;
-                jobInfo += `<div id="${job.annons.annonsid}" class="single-job-wrapper">
+                jobInfo += `<div id="${job.annons.annonsid}" class="single-job-container">
                 <button id="returnButton" class="btn btn-primary">Tillbaka</button>
                 <h2>${job.annons.annonsrubrik}</h2>
                 <h3>Kommun: ${job.annons.kommunnamn}</h3>
@@ -286,7 +286,7 @@ const View = (function(){
                 <div id="linkContainer" class="hidden">Länk till annons: <a href="${job.annons.platsannonsUrl}">${job.annons.platsannonsUrl}</a></div>
                 </div>`;
 
-            wrapper.innerHTML = jobInfo;
+            container.innerHTML = jobInfo;
         },
 
         displayCountyOptions: function(countys){
@@ -344,7 +344,7 @@ const View = (function(){
             jobCategoriesDiv.innerHTML = categoryList;
         },
 
-        emptyNumberOfJobsWrapper: function(){
+        emptyNumberOfJobsContainer: function(){
             numberOfJobsWrapper.innerHTML = "";
         }
      }
