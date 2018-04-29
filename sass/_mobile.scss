@@ -1,5 +1,6 @@
 $primary-blue: #007bff;
 $success: #30A64A;
+$lightgrey: #ced4da;
 
 body{
     margin: 0px;
@@ -19,20 +20,38 @@ h3{
 }
 
 header{
-    padding: 50px 0 20px 0;
+    padding: 40px 0 20px 0;
     margin-bottom: 20px;
     background-color: lighten($primary-blue, 40%);
 }
 
 .card{
-    margin: 10px 0 10px 0;
+    margin: 20px 0 20px 0;
     h2{
         font-weight: bold;
     }
 }
 
-input[type=submit], button:hover, a{
+button:hover, a{
     cursor: pointer;
+}
+
+input[type=submit]:hover{
+    color: white;
+    background-color: $primary-blue;
+    border: 1px solid $primary-blue;
+    cursor: pointer;
+}
+
+input[type=submit], input[type=text]{
+    padding: .375rem .75rem;
+    border: 0px;
+    border-radius: .25rem;
+    border: 1px solid $lightgrey;
+}
+
+select{
+    margin-bottom: 15px;
 }
 
 .list-group{
