@@ -41,6 +41,7 @@ const Model = (function(){
             jobs.fetchOne(id)
             .then(job => {
                 location.hash = `/annonsid/${id}`;
+                View.emptyNumberOfJobsContainer();
                 View.displayOneJob(job);
                 Controller.bindSingleJobPageEventListeners();
             });
