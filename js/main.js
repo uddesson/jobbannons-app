@@ -168,7 +168,6 @@ const Controller = (function (){
             displaySavedAds.addEventListener('click', function(){
                 let myAds = Model.getLocallyStoredAds();                
                 View.displaySavedAds(myAds);
-                View.toggleClassHidden(displaySavedAds)
             });
 
             for(let category of jobCategories){
@@ -309,6 +308,7 @@ const View = (function(){
         
         displaySavedAds: function(myAds){
             let savedAdsList = document.getElementById('savedAdsList');
+            savedAdsList.innerHTML = '';
 
             for (var ad of myAds){
                 let listElement = document.createElement('li');
@@ -317,6 +317,8 @@ const View = (function(){
 
                 savedAdsList.appendChild(listElement);
             }
+
+            View.toggleClassHidden(savedAdsList);
         },
 
         toggleClassHidden: function(element){
