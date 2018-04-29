@@ -41,7 +41,6 @@ const Model = (function(){
             jobs.fetchOne(id)
             .then(job => {
                 location.hash = `/annonsid/${id}`;
-
                 View.displayOneJob(job);
                 Controller.bindSingleJobPageEventListeners();
             });
@@ -164,10 +163,11 @@ const Controller = (function (){
                     });
                 }
             }
-
+            
             displaySavedAds.addEventListener('click', function(){
-                let myAds = Model.getLocallyStoredAds();
+                let myAds = Model.getLocallyStoredAds();                
                 View.displaySavedAds(myAds);
+                View.toggleClassHidden(displaySavedAds)
             });
 
             for(let category of jobCategories){
@@ -247,16 +247,21 @@ const View = (function(){
             for(let job of jobs){
                 //let shortenedDate = Model.shortenDate(job.sista_ansokningsdag);
                 let shortenedDate = job.sista_ansokningsdag;
-                jobInfo += `<div class="job-container">
-                <h2>${job.annonsrubrik}</h2>
-                <p>Arbetsplats: ${job.arbetsplatsnamn}</p>
-                <p>Kommun: ${job.kommunnamn}</p>
-                <p>Sista ansökningsdag: ${shortenedDate}</p>
-                <p>Yrkesroll: ${job.yrkesbenamning}</p>
-                <p>Anställningstyp: ${job.anstallningstyp}</p>
-                <a href="${job.annonsurl}">Länk till annons</a><br>
-                <button class="saveJobAd btn btn-primary" data-id="${job.annonsid}">Spara annons</button>
-                <button class="showJobAd btn btn-primary" data-id="${job.annonsid}">Visa annons</button>
+                jobInfo += `
+                <div class="col-12">
+                    <div class="card" style="padding: 2px;">
+                        <div class="job-container card-body">
+                            <h2 class="card-title">${job.annonsrubrik}</h2>
+                            <h3 class="card-subtitle mb-2 text-muted">${job.arbetsplatsnamn}</h3>
+                            <p class="card-text">Kommun: ${job.kommunnamn}</p>
+                            <p class="card-text">Sista ansökningsdag: ${shortenedDate}</p>
+                            <p class="card-text">Yrkesroll: ${job.yrkesbenamning}</p>
+                            <p class="card-text">Anställningstyp: ${job.anstallningstyp}</p>
+                            <button class="saveJobAd btn btn-primary" data-id="${job.annonsid}">Spara annons</button>
+                            <button class="showJobAd btn btn-primary" data-id="${job.annonsid}">Visa annons</button>
+                            <br><a href="${job.annonsurl}" class="card-link">Länk till arbetsförmedlingen</a>
+                        </div>
+                    </div>
                 </div>`;
             }
             container.innerHTML = jobInfo;
@@ -278,7 +283,7 @@ const View = (function(){
 
             let jobInfo = ``;
                 jobInfo += `<div id="${job.annons.annonsid}" class="single-job-container">
-                <button id="returnButton" class="btn btn-primary">Tillbaka</button>
+                <button id="returnButton" class="btn btn-sm btn-outline-primary">Tillbaka</button>
                 <h2>${job.annons.annonsrubrik}</h2>
                 <h3>Kommun: ${job.annons.kommunnamn}</h3>
                 <p>${job.annons.annonstext.replace(/(\r\n|\n|\r)/gm, '<br />')}</p>
@@ -306,6 +311,7 @@ const View = (function(){
 
             for (var ad of myAds){
                 let listElement = document.createElement('li');
+                listElement.classList.add('list-group-item','d-flex','align-items-center')
                 listElement.innerText = ad;
 
                 savedAdsList.appendChild(listElement);
@@ -319,10 +325,12 @@ const View = (function(){
         displayPagination: function(){   
             paginationDiv.innerHTML = "";
 
-            const nextPage = document.createElement('p');
-            nextPage.classList.add('col-6');
-            const previousPage = document.createElement('p');
-            previousPage.classList.add('col-6');
+            const nextPage = document.createElement('button');
+            nextPage.type = "button";
+            nextPage.classList.add('btn','btn-sm','btn-outline-primary');
+            const previousPage = document.createElement('button');
+            nextPage.type = "button";
+            previousPage.classList.add('btn','btn-sm','btn-outline-primary');
 
             nextPage.id = "nextPage";
             previousPage.id = "previousPage";
@@ -338,7 +346,10 @@ const View = (function(){
             let categoryList = ""
 
             for(let category of categories.soklista.sokdata){ 
-                categoryList += `<li class="job-category" data-id="${category.id}">${category.namn} (Lediga jobb: ${category.antal_ledigajobb})</li>`
+                categoryList += `<li class="job-category list-group-item d-flex justify-content-between align-items-center" 
+                data-id="${category.id}">${category.namn} 
+                <span class="badge badge-primary badge-pill">${category.antal_ledigajobb}</span>
+                </li>`
             }
 
             jobCategoriesDiv.innerHTML = categoryList;

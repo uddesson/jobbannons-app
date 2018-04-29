@@ -1,7 +1,21 @@
 $primary-blue: #007bff;
+$success: #30A64A;
 
 body{
     margin: 0px;
+}
+
+h2{
+    font-size: 1.4em;
+}
+
+h3{
+    font-size: 1.2em;
+}
+
+.statistics-text{
+    color: lighten($success, 10%);
+    margin-bottom: 10px;
 }
 
 header{
@@ -10,27 +24,42 @@ header{
     background-color: lighten($primary-blue, 40%);
 }
 
+.card{
+    margin: 10px 0 10px 0;
+    h2{
+        font-weight: bold;
+    }
+}
+
 input[type=submit], button:hover, a{
     cursor: pointer;
 }
 
-.job-container{
-    padding: 20px 0 20px 0;
+.list-group{
+    margin-bottom: 20px;
+}
+
+.btn{
+    margin-bottom: 10px;
 }
 
 .sidebar{
     padding-top: 20px;
 }
 
-.job-category{ 
+.single-job-container{
+    padding: 0 15px 0 15px;
+}
 
+.list-group-item{ 
     &:hover{
-        text-decoration: underline;
         cursor: pointer;
     }
 }
 
 .pagination-container{
+    margin: 20px 0 20px 0;
+
     p{
         text-decoration: underline;
         cursor: pointer;
