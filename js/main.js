@@ -179,9 +179,17 @@ const Controller = (function (){
             });
 
             searchButton.addEventListener('click', function(event){
+                
                 event.preventDefault();
-                searchQuery = searchBar.value; 
-                Model.fetchBasedOnSearch(searchQuery);
+                searchQuery = searchBar.value;
+                
+                if(searchQuery.trim() === ''){
+                    alert('Du måste fylla i sökfältet');
+                }
+                else{
+                    Model.fetchBasedOnSearch(searchQuery);
+                }
+            
             });
         },
 
