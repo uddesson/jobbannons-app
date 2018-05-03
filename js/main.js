@@ -21,12 +21,13 @@ const Model = (function(){
 
     return {
         handleAllJobs: function(){
+
             jobs.fetchAll()
             .then(jobs => {
                 window.location.hash = `sida=${pageNumber}`;
 
                 View.displayJobs(jobs);
-                Controller.bindHomePageEventListeners();
+                Controller.bindJobAdEventListeners();
                 View.displayPagination();
                 Controller.bindPaginationEventListeners();
                 View.displayNumberOfJobs(jobs);
@@ -60,6 +61,7 @@ const Model = (function(){
             categoriesFetch.fetchAll()
             .then((categories) => {
                 View.displayJobCategories(categories);
+                Controller.bindJobCategoryEventListeners();
             })
         },
 
@@ -93,6 +95,7 @@ const Model = (function(){
             } else {
                 Model.handleAllJobs();
             }
+            
         },
 
         fetchBasedOnSearch: function(searchQuery){
@@ -140,10 +143,43 @@ const Controller = (function (){
     
     return {
         bindHomePageEventListeners: function(){
-            const allButtons = document.querySelectorAll('button');
             const displaySavedAds = document.getElementById('displaySavedAds');
+            const showJobsButton = document.getElementById('showJobsButton');
+            const searchButton = document.getElementById('searchButton');
+            const searchBar = document.getElementById('searchBar');
+           
+            displaySavedAds.addEventListener('click', function(){
+                let myAds = Model.getLocallyStoredAds();                
+                View.displaySavedAds(myAds);
+            });
+          
+            showJobsButton.addEventListener('click', function(event){
+                event.preventDefault();
+                Model.setCustomFetchPath();
+                Model.handleAllJobs();
+            });
+
+            searchButton.addEventListener('click', function(event){
+                event.preventDefault();
+                let searchQuery = searchBar.value; 
+                Model.fetchBasedOnSearch(searchQuery);
+            }); 
+        },
+
+        bindJobCategoryEventListeners: function(){
             const jobCategories = document.querySelectorAll('.job-category');
 
+            for(let category of jobCategories){
+                category.addEventListener('click', function(){
+                    let categoryId = this.dataset.id;
+                    jobs.additionalUrlParameters = `matchning?yrkesomradeid=${categoryId}`;
+                    Model.handleAllJobs();
+                });
+            }
+        },
+
+        bindJobAdEventListeners: function(){
+            const allButtons = document.querySelectorAll('button');
             for(button of allButtons){
                 
                 if(button.classList.contains('showJobAd')){
@@ -165,18 +201,6 @@ const Controller = (function (){
                 }
             }
             
-            displaySavedAds.addEventListener('click', function(){
-                let myAds = Model.getLocallyStoredAds();                
-                View.displaySavedAds(myAds);
-            });
-
-            for(let category of jobCategories){
-                category.addEventListener('click', function(){
-                    let categoryId = this.dataset.id;
-                    jobs.additionalUrlParameters = `matchning?yrkesomradeid=${categoryId}`;
-                    Model.handleAllJobs();
-                });
-            }
         },
 
         bindSingleJobPageEventListeners: function(){
@@ -188,24 +212,6 @@ const Controller = (function (){
 
             shareButton.addEventListener('click', function(){
                 View.toggleClassHidden(linkContainer);
-            });
-        },
-
-        bindFormEventListeners: function(){
-            const showJobsButton = document.getElementById('showJobsButton');
-            const searchButton = document.getElementById('searchButton');
-            const searchBar = document.getElementById('searchBar');
-            
-            showJobsButton.addEventListener('click', function(event){
-                event.preventDefault();
-                Model.setCustomFetchPath();
-                Model.handleAllJobs();
-            });
-
-            searchButton.addEventListener('click', function(event){
-                event.preventDefault();
-                let searchQuery = searchBar.value; 
-                Model.fetchBasedOnSearch(searchQuery);
             });
         },
 
@@ -367,5 +373,5 @@ const View = (function(){
 Model.handleAllCountys();
 Controller.checkCurrentUrl();
 Model.fetchBasedOnUrl();
-Controller.bindFormEventListeners();
 Model.handleAllJobCategories();
+Controller.bindHomePageEventListeners();
