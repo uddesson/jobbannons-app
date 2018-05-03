@@ -13,9 +13,9 @@ class Fetch {
     }
 }
 
-const jobs = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/', 'matchning?lanid=1&antalrader=10');
-
 const Model = (function(){
+    const jobs = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/', 'matchning?lanid=1&antalrader=10');
+
     let pageNumber = 1; // Default value for pagination
     let searchState = false; // Default value, view differs when set to true (user is searching)
 
