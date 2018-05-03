@@ -123,7 +123,7 @@ const Model = (function(){
             jobs.additionalUrlParameters = `matchning?lanid=${selectedCounty}&antalrader=${selectedNumber}`;
         },
 
-        nextOrPreviousPage: function(state){
+        nextOrPreviousPage: function(state, searchQuery){
             const selectedCounty = Model.returnSelectLists()[1];
             const selectedNumber = Model.returnSelectLists()[2];
             
@@ -133,14 +133,22 @@ const Model = (function(){
             if(state === "previous" && pageNumber > 1){
                 pageNumber --;
             }
-            jobs.additionalUrlParameters = `matchning?lanid=${selectedCounty}&antalrader=${selectedNumber}&sida=${pageNumber}`;
+            
+            if(searchState){
+                jobs.additionalUrlParameters = `matchning?nyckelord=${searchQuery}&antalrader=${selectedNumber}&sida=${pageNumber}`;
+            } 
+            else {
+                jobs.additionalUrlParameters = `matchning?lanid=${selectedCounty}&antalrader=${selectedNumber}&sida=${pageNumber}`;
+            }
+
             Model.handleAllJobs();   
         }
     }
 }());
 
 const Controller = (function (){ 
-    
+    let searchQuery = '';
+
     return {
         bindHomePageEventListeners: function(){
             const displaySavedAdsHeading = document.getElementById('displaySavedAds');
@@ -148,10 +156,7 @@ const Controller = (function (){
             const searchButton = document.getElementById('searchButton');
             const searchBar = document.getElementById('searchBar');
             const savedAdsList = document.getElementById('savedAdsList');
-            // const savedAdsListElements = savedAdsList.querySelectorAll('li');
 
-
-            
             displaySavedAdsHeading.addEventListener('click', function(){
                 let myAds = Model.getLocallyStoredAds();  
                 View.displaySavedAds(myAds);
@@ -175,12 +180,9 @@ const Controller = (function (){
 
             searchButton.addEventListener('click', function(event){
                 event.preventDefault();
-                let searchQuery = searchBar.value; 
+                searchQuery = searchBar.value; 
                 Model.fetchBasedOnSearch(searchQuery);
             });
-
-           
-            
         },
 
         bindJobCategoryEventListeners: function(){
@@ -240,12 +242,12 @@ const Controller = (function (){
             const previousPage = document.getElementById('previousPage');
 
             nextPage.addEventListener('click', () => {
-                Model.nextOrPreviousPage("next");
+                Model.nextOrPreviousPage('next',searchQuery);
                 window.scrollTo(0, 0);
             });
 
             previousPage.addEventListener('click', () => {
-                Model.nextOrPreviousPage("previous");
+                Model.nextOrPreviousPage('previous',searchQuery);
                 window.scrollTo(0, 0);
             });
         },
