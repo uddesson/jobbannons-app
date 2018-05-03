@@ -143,14 +143,28 @@ const Controller = (function (){
     
     return {
         bindHomePageEventListeners: function(){
-            const displaySavedAds = document.getElementById('displaySavedAds');
+            const displaySavedAdsHeading = document.getElementById('displaySavedAds');
             const showJobsButton = document.getElementById('showJobsButton');
             const searchButton = document.getElementById('searchButton');
             const searchBar = document.getElementById('searchBar');
-           
-            displaySavedAds.addEventListener('click', function(){
-                let myAds = Model.getLocallyStoredAds();                
+            const savedAdsList = document.getElementById('savedAdsList');
+            // const savedAdsListElements = savedAdsList.querySelectorAll('li');
+
+
+            
+            displaySavedAdsHeading.addEventListener('click', function(){
+                let myAds = Model.getLocallyStoredAds();  
                 View.displaySavedAds(myAds);
+
+                let savedAdsListElements = savedAdsList.childNodes;
+                let range = savedAdsList.childNodes.length;
+
+                for(var i = 0; i < range; i++){
+                    savedAdsListElements[i].addEventListener('click', function(){
+                        Model.handleSingleJob(this.dataset.id);
+                        window.scrollTo(0, 0);
+                    })
+                }
             });
           
             showJobsButton.addEventListener('click', function(event){
@@ -163,7 +177,10 @@ const Controller = (function (){
                 event.preventDefault();
                 let searchQuery = searchBar.value; 
                 Model.fetchBasedOnSearch(searchQuery);
-            }); 
+            });
+
+           
+            
         },
 
         bindJobCategoryEventListeners: function(){
@@ -191,11 +208,14 @@ const Controller = (function (){
 
                 if(button.classList.contains('saveJobAd')){
                     let adID = button.dataset.id;
-                    
-                    button.addEventListener('click', function(){
-                        // We push the clicked ad into our locally stored ads
+                    let adTitle = button.dataset.title;
+                    let adToSave = {
+                        title: adTitle,
+                        id: adID
+                    }
+                    button.addEventListener('click', function(){                       
                         let myAds = Model.getLocallyStoredAds();
-                        myAds.push(adID);           
+                        myAds.push(adToSave);           
                         Model.storeAdsInLocalStorage(myAds);
                     });
                 }
@@ -263,7 +283,7 @@ const View = (function(){
                             <p class="card-text">Sista ansökningsdag: ${shortenedDate}</p>
                             <p class="card-text">Yrkesroll: ${job.yrkesbenamning}</p>
                             <p class="card-text">Anställningstyp: ${job.anstallningstyp}</p>
-                            <button class="saveJobAd btn btn-primary" data-id="${job.annonsid}">Spara annons</button>
+                            <button class="saveJobAd btn btn-primary" data-id="${job.annonsid}" data-title="${job.annonsrubrik}">Spara annons</button>
                             <button class="showJobAd btn btn-primary" data-id="${job.annonsid}">Visa annons</button>
                             <br><a href="${job.annonsurl}" class="card-link">Länk till arbetsförmedlingen</a>
                         </div>
@@ -318,8 +338,9 @@ const View = (function(){
 
             for (var ad of myAds){
                 let listElement = document.createElement('li');
+                listElement.dataset.id = ad.id;
                 listElement.classList.add('list-group-item','d-flex','align-items-center')
-                listElement.innerText = ad;
+                listElement.innerText = ad.title;
 
                 savedAdsList.appendChild(listElement);
             }
