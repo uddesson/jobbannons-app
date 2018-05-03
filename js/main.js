@@ -13,9 +13,9 @@ class Fetch {
     }
 }
 
-const Model = (function(){
-    const jobs = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/', 'matchning?lanid=1&antalrader=10');
+const jobs = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/', 'matchning?nyckelord=sverige&antalrader=10');
 
+const Model = (function(){
     let pageNumber = 1; // Default value for pagination
     let searchState = false; // Default value, view differs when set to true (user is searching)
 
@@ -109,23 +109,30 @@ const Model = (function(){
             const showNumberOfJobs = document.getElementById('showNumberOfJobs');
             let selectedCounty = showJobsInCounty[showJobsInCounty.selectedIndex].value;
             let selectedNumberOfJobs = showNumberOfJobs[showNumberOfJobs.selectedIndex].value;
+            let noCountyIsSelected = false;
 
-            // Set to Stockholm county number by default
             if(selectedCounty === "-"){
-                 selectedCounty = 1;
+                 noCountyIsSelected = true;
             }
-            return [showJobsInCounty, selectedCounty, selectedNumberOfJobs];
+            return [showJobsInCounty, selectedCounty, selectedNumberOfJobs, noCountyIsSelected];
         },
 
         setCustomFetchPath: function(){
-            const selectedCounty = Model.returnSelectLists()[1];
             const selectedNumber = Model.returnSelectLists()[2];
-            jobs.additionalUrlParameters = `matchning?lanid=${selectedCounty}&antalrader=${selectedNumber}`;
+            const noCountyIsSelected = Model.returnSelectLists()[3];
+
+            // Is true when user wants to show all jobs in Sweden
+            if(noCountyIsSelected){
+                jobs.additionalUrlParameters = `matchning?nyckelord=sverige&antalrader=${selectedNumber}`;
+            } else {
+                const selectedCounty = Model.returnSelectLists()[1];
+                jobs.additionalUrlParameters = `matchning?lanid=${selectedCounty}&antalrader=${selectedNumber}`;
+            }
         },
 
-        nextOrPreviousPage: function(state, searchQuery){
-            const selectedCounty = Model.returnSelectLists()[1];
+        changePage: function(state, searchQuery){
             const selectedNumber = Model.returnSelectLists()[2];
+            const noCountyIsSelected = Model.returnSelectLists()[3];
             
             if(state === "next"){
                 pageNumber ++;
@@ -137,7 +144,11 @@ const Model = (function(){
             if(searchState){
                 jobs.additionalUrlParameters = `matchning?nyckelord=${searchQuery}&antalrader=${selectedNumber}&sida=${pageNumber}`;
             } 
+            else if(noCountyIsSelected) {
+                jobs.additionalUrlParameters = `matchning?nyckelord=sverige&antalrader=${selectedNumber}&sida=${pageNumber}`;  
+            }
             else {
+                const selectedCounty = Model.returnSelectLists()[1];
                 jobs.additionalUrlParameters = `matchning?lanid=${selectedCounty}&antalrader=${selectedNumber}&sida=${pageNumber}`;
             }
 
@@ -250,12 +261,12 @@ const Controller = (function (){
             const previousPage = document.getElementById('previousPage');
 
             nextPage.addEventListener('click', () => {
-                Model.nextOrPreviousPage('next',searchQuery);
+                Model.changePage('next',searchQuery);
                 window.scrollTo(0, 0);
             });
 
             previousPage.addEventListener('click', () => {
-                Model.nextOrPreviousPage('previous',searchQuery);
+                Model.changePage('previous',searchQuery);
                 window.scrollTo(0, 0);
             });
         },
@@ -305,12 +316,19 @@ const View = (function(){
 
         displayNumberOfJobs: function(jobs) {
             let totalJobs = jobs.matchningslista.antal_platsannonser;
-            let county = jobs.matchningslista.matchningdata[0].lan;
+            let location = '';
+            let noCountyIsSelected = Model.returnSelectLists()[3];
+            let jobInfo = '';
 
-            let jobInfo = ``;
-               jobInfo = `<h2>Just nu finns ${totalJobs} 
-               jobbannonser i ${county}</h2>`;
-               numberOfJobsContainer.innerHTML = jobInfo;
+            if(noCountyIsSelected){
+                location = 'Sverige';
+            } else{
+                location = jobs.matchningslista.matchningdata[0].lan;
+            }
+
+            jobInfo = `<h2>Just nu finns ${totalJobs} 
+            jobbannonser i ${location}</h2>`;
+            numberOfJobsContainer.innerHTML = jobInfo;
         },
 
         displayOneJob: function(job){
