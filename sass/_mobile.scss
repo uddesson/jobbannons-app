@@ -14,11 +14,6 @@ h3{
     font-size: 1.2em;
 }
 
-.statistics-text{
-    color: lighten($success, 10%);
-    margin-bottom: 10px;
-}
-
 header{
     background-image: url("../images/hero.jpg");
     margin: 0px;
@@ -27,46 +22,12 @@ header{
     background-position: top; 
     padding: 40px 0 20px 0;
     margin-bottom: 20px;
+    color: white;
     background-color: lighten($primary-blue, 40%);
 }
 
-.card{
-    margin: 20px 0 20px 0;
-    h2{
-        font-weight: bold;
-    }
-}
-
-button:hover, a{
-    cursor: pointer;
-}
-
-input[type=submit]:hover{
-    color: white;
-    background-color: $primary-blue;
-    border: 1px solid $primary-blue;
-    cursor: pointer;
-}
-
-input[type=submit], input[type=text]{
-    padding: .375rem .75rem;
-    border: 0px;
-    border-radius: .25rem;
-    border: 1px solid $lightgrey;
-}
-
-select{
-    margin-bottom: 15px;
-}
-
-/******************************
-Customizing Bootstrap-components 
-*******************************/
-.list-group{
-    margin-bottom: 20px;
-}
-
-.btn{
+.statistics-text{
+    color: lighten($success, 10%);
     margin-bottom: 10px;
 }
 
@@ -78,22 +39,67 @@ Customizing Bootstrap-components
     padding: 0 15px 0 15px;
 }
 
+.pagination-container{
+    margin: 20px 0 20px 0;
+
+    p{
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+
+input[type=submit], input[type=text]{
+    border: 0px;
+    width: 100%;
+}
+
+select{
+    margin-bottom: 15px;
+}
+
+/******************************
+Customizing Bootstrap-components 
+*******************************/
+
+.card{
+    margin: 20px 0 20px 0;
+    h2{
+        font-weight: bold;
+    }
+}
+
+.container-fluid{
+    padding: 0px;
+}
+
+.list-group{
+    margin-bottom: 20px;
+}
+
+.btn{
+    margin-bottom: 10px;
+}
+
+.dropdown-menu{
+    width: 100%;
+}
+
 .list-group-item{ 
     &:hover{
         cursor: pointer;
     }
 }
 
-.pagination-container{
-    margin: 20px 0 20px 0;
 /***************************
 ******** Utilities *********
 ****************************/
 
-    p{
-        text-decoration: underline;
-        cursor: pointer;
-    }
+.padding-large{
+    padding: 20px;
+}
+
+.padding-small{
+    padding: 5px;
 }
 
 .hidden {
