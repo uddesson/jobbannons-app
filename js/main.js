@@ -1,10 +1,9 @@
 class Fetch {
-    constructor(baseUrl, additionalUrlParameters){
-        this.baseUrl = baseUrl;
+    constructor(additionalUrlParameters){
         this.additionalUrlParameters = additionalUrlParameters;
     }
     fetchAll(){
-        return fetch(this.baseUrl + this.additionalUrlParameters)
+        return fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/' + this.additionalUrlParameters)
         .then((response) => response.json())
     }
     fetchOne(id){
@@ -13,7 +12,7 @@ class Fetch {
     }
 }
 
-const jobs = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/', 'matchning?nyckelord=sverige&antalrader=10');
+const jobs = new Fetch('matchning?nyckelord=sverige&antalrader=10');
 
 const Model = (function(){
     let pageNumber = 1; // Default value for pagination
@@ -49,7 +48,7 @@ const Model = (function(){
         },
 
         handleAllCountys: function(){
-            const countyFetch = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/lan', '')
+            const countyFetch = new Fetch('soklista/lan')
             countyFetch.fetchAll()
             .then((countys) => {
                 View.displayCountyOptions(countys);
@@ -57,7 +56,7 @@ const Model = (function(){
         },
 
         handleAllJobCategories: function(){
-            const categoriesFetch = new Fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/yrkesomraden', '');
+            const categoriesFetch = new Fetch('soklista/yrkesomraden');
             categoriesFetch.fetchAll()
             .then((categories) => {
                 View.displayJobCategories(categories);
