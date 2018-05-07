@@ -1,9 +1,10 @@
 class Fetch {
     constructor(additionalUrlParameters){
+        this.baseUrl = 'http://api.arbetsformedlingen.se/af/v0/platsannonser/';
         this.additionalUrlParameters = additionalUrlParameters;
     }
     fetchAll(){
-        return fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/' + this.additionalUrlParameters)
+        return fetch(this.baseUrl + this.additionalUrlParameters)
         .then((response) => response.json())
     }
     fetchOne(id){
@@ -96,9 +97,9 @@ const Model = (function(){
             jobs.additionalUrlParameters = `matchning?nyckelord=${searchQuery}`;
             Model.handleAllJobs(); 
         },
-
+        
         returnSelectLists: function(){
-
+            // Returns users selected values and recurring state     
             const showJobsInCounty = document.getElementById('showJobsInCounty');
             const showNumberOfJobs = document.getElementById('showNumberOfJobs');
             let selectedCounty = showJobsInCounty[showJobsInCounty.selectedIndex].value;
@@ -325,6 +326,7 @@ const View = (function(){
         displayOneJob: function(job){
             job = job.platsannons;
             paginationDiv.innerHTML = '';
+            const jobUrl = window.location.href;
 
             let jobInfo = '';
                 jobInfo += `<div id="${job.annons.annonsid}" class="single-job-container">
@@ -333,7 +335,7 @@ const View = (function(){
                 <h3>Kommun: ${job.annons.kommunnamn}</h3>
                 <p>${job.annons.annonstext.replace(/(\r\n|\n|\r)/gm, '<br />')}</p>
                 <button id="shareButton" class="btn btn-primary">Dela annons</button>
-                <div id="linkContainer" class="hidden">Länk till annons: <a href="${job.annons.platsannonsUrl}">${job.annons.platsannonsUrl}</a></div>
+                <div id="linkContainer" class="hidden">Länk till annons: <a href="${jobUrl}">${jobUrl}</a></div>
                 </div>`;
 
             container.innerHTML = jobInfo;
