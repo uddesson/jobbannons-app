@@ -22,9 +22,23 @@ header{
     background-position: top; 
     padding: 40px 0 20px 0;
     margin-bottom: 20px;
-    color: white;
-    background-color: lighten($primary-blue, 40%);
+
+    h1, p{
+        color: white;
+    }
 }
+
+.job-profession {
+    padding: 6px;
+    margin: 4px 2px;
+    font-size: 0.9em;
+
+    &:hover {
+        cursor: pointer;
+        background-color: darken($lightgrey, 10%);
+    }
+}    
+
 
 .statistics-text{
     color: lighten($success, 10%);
@@ -33,6 +47,12 @@ header{
 
 .sidebar{
     padding-top: 20px;
+}
+
+.job-category {
+    &:hover {
+        background-color: darken(white, 10%);
+    }
 }
 
 .single-job-container{

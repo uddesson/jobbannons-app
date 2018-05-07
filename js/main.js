@@ -446,7 +446,7 @@ const View = (function(){
 
                 for (result of results){
                     resultListElements += `
-                    <li class="job-profession" data-id="${result.id}">${result.namn}</li>`;
+                    <a class="job-profession badge badge-light" data-id="${result.id}">${result.namn}</a>`;
                 }
                 searchResultsList.innerHTML = resultListElements;
                 Controller.bindProfessionEventListeners();
