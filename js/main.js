@@ -276,7 +276,7 @@ const Controller = (function (){
             });
         }
     }
-})();
+}());
 
 const View = (function(){
     const container = document.getElementById('container-inner');
