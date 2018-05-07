@@ -169,6 +169,11 @@ const Controller = (function (){
             const searchButton = document.getElementById('searchButton');
             const searchBar = document.getElementById('searchBar');
             const savedAdsList = document.getElementById('savedAdsList');
+            const homeLink = document.getElementById('homeLink');
+
+            homeLink.addEventListener('click', function(){
+                window.location.hash = `sida=1`;
+            });
 
             displaySavedAdsHeading.addEventListener('click', function(){
                 let myAds = Model.getLocallyStoredAds();  
@@ -292,9 +297,7 @@ const Controller = (function (){
             window.addEventListener('hashchange', event => {
                 Model.fetchBasedOnUrl();
             });
-        },
-
-
+        }
     }
 }());
 

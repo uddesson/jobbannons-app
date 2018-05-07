@@ -26,6 +26,10 @@ header{
     h1, p{
         color: white;
     }
+    
+    h1:hover{
+        cursor: pointer;
+    }
 }
 
 .job-profession {
