@@ -64,23 +64,17 @@ const Model = (function(){
             })
         },
 
-        shortenDate: function(date){
-            return date.substring(0,10);
-        },
-
         storeAdsInLocalStorage: function(myAds){
-            //Save the input (the array of ads) as strings in localStorage
-            localStorage.setItem("myAds", JSON.stringify(myAds));
+            localStorage.setItem('myAds', JSON.stringify(myAds));
         },
 
         getLocallyStoredAds: function(){ 
-            var storedAds = localStorage.getItem("myAds");
+            var storedAds = localStorage.getItem('myAds');
         
-            if (storedAds == null){
+            if (storedAds === null){
                 //Define an empty array, otherwise the user won't be able to push anything into it
                 return [];
             } else {
-                //Turn array back from string to regular array - and return it
                 return JSON.parse(storedAds); 
             }
         },
@@ -104,13 +98,14 @@ const Model = (function(){
         },
 
         returnSelectLists: function(){
+
             const showJobsInCounty = document.getElementById('showJobsInCounty');
             const showNumberOfJobs = document.getElementById('showNumberOfJobs');
             let selectedCounty = showJobsInCounty[showJobsInCounty.selectedIndex].value;
             let selectedNumberOfJobs = showNumberOfJobs[showNumberOfJobs.selectedIndex].value;
             let noCountyIsSelected = false;
 
-            if(selectedCounty === "-"){
+            if(selectedCounty === '-'){
                  noCountyIsSelected = true;
             }
             return [showJobsInCounty, selectedCounty, selectedNumberOfJobs, noCountyIsSelected];
@@ -133,10 +128,10 @@ const Model = (function(){
             const selectedNumber = Model.returnSelectLists()[2];
             const noCountyIsSelected = Model.returnSelectLists()[3];
             
-            if(state === "next"){
+            if(state === 'next'){
                 pageNumber ++;
             }
-            if(state === "previous" && pageNumber > 1){
+            if(state === 'previous' && pageNumber > 1){
                 pageNumber --;
             }
             
@@ -199,7 +194,6 @@ const Controller = (function (){
                 else{
                     Model.fetchBasedOnSearch(searchQuery);
                 }
-            
             });
         },
 
@@ -285,14 +279,12 @@ const View = (function(){
     const jobCategoriesDiv = document.getElementById('jobCategories');
 
      return {
-        // View 10 latest ads
+        
         displayJobs: function(jobs) {
             jobs = jobs.matchningslista.matchningdata;
-            let jobInfo = ``;
+            let jobInfo = '';
             
             for(let job of jobs){
-                //let shortenedDate = Model.shortenDate(job.sista_ansokningsdag);
-                let shortenedDate = job.sista_ansokningsdag;
                 jobInfo += `
                 <div class="col-12">
                     <div class="card" style="padding: 2px;">
@@ -300,7 +292,7 @@ const View = (function(){
                             <h2 class="card-title">${job.annonsrubrik}</h2>
                             <h3 class="card-subtitle mb-2 text-muted">${job.arbetsplatsnamn}</h3>
                             <p class="card-text">Kommun: ${job.kommunnamn}</p>
-                            <p class="card-text">Sista ansökningsdag: ${shortenedDate}</p>
+                            <p class="card-text">Sista ansökningsdag: ${job.sista_ansokningsdag}</p>
                             <p class="card-text">Yrkesroll: ${job.yrkesbenamning}</p>
                             <p class="card-text">Anställningstyp: ${job.anstallningstyp}</p>
                             <button class="saveJobAd btn btn-primary" data-id="${job.annonsid}" data-title="${job.annonsrubrik}">Spara annons</button>
@@ -332,9 +324,9 @@ const View = (function(){
 
         displayOneJob: function(job){
             job = job.platsannons;
-            paginationDiv.innerHTML = "";
+            paginationDiv.innerHTML = '';
 
-            let jobInfo = ``;
+            let jobInfo = '';
                 jobInfo += `<div id="${job.annons.annonsid}" class="single-job-container">
                 <button id="returnButton" class="btn btn-sm btn-outline-primary">Tillbaka</button>
                 <h2>${job.annons.annonsrubrik}</h2>
@@ -380,40 +372,40 @@ const View = (function(){
         },
 
         displayPagination: function(){   
-            paginationDiv.innerHTML = "";
+            paginationDiv.innerHTML = '';
 
             const nextPage = document.createElement('button');
-            nextPage.type = "button";
+            nextPage.type = 'button';
             nextPage.classList.add('btn','btn-sm','btn-outline-primary');
             const previousPage = document.createElement('button');
-            nextPage.type = "button";
+            nextPage.type = 'button';
             previousPage.classList.add('btn','btn-sm','btn-outline-primary');
 
-            nextPage.id = "nextPage";
-            previousPage.id = "previousPage";
+            nextPage.id = 'nextPage';
+            previousPage.id = 'previousPage';
 
-            nextPage.innerText = "Nästa";
-            previousPage.innerText = "Föregående";
+            nextPage.innerText = 'Nästa';
+            previousPage.innerText = 'Föregående';
             
             paginationDiv.appendChild(previousPage);
             paginationDiv.appendChild(nextPage);
         },
 
         displayJobCategories: function(categories){
-            let categoryList = ""
+            let categoryList = '';
 
             for(let category of categories.soklista.sokdata){ 
                 categoryList += `<li class="job-category list-group-item d-flex justify-content-between align-items-center" 
                 data-id="${category.id}">${category.namn} 
                 <span class="badge badge-primary badge-pill">${category.antal_ledigajobb}</span>
-                </li>`
+                </li>`;
             }
 
             jobCategoriesDiv.innerHTML = categoryList;
         },
 
         emptyNumberOfJobsContainer: function(){
-            numberOfJobsContainer.innerHTML = "";
+            numberOfJobsContainer.innerHTML = '';
         }
      }
 }());
