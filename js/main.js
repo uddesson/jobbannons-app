@@ -96,6 +96,14 @@ const Model = (function(){
             jobs.additionalUrlParameters = `matchning?${typeOfSearch}=${searchQuery}`;
             Model.handleAllJobs(); 
         },
+
+        fetchAutoComplete: function(searchQuery){
+            const autoCompleteFetch = new Fetch(`soklista/yrken/${searchQuery}`)
+            autoCompleteFetch.fetchAll()
+            .then((results) => {
+                View.displayAutoCompleteResults(results);
+            });
+        },
         
         returnSelectLists: function(){
             // Returns users selected values and recurring state     
@@ -195,6 +203,13 @@ const Controller = (function (){
                     Model.fetchBasedOnSearch('nyckelord', searchQuery);
                 }
             });
+
+            searchBar.addEventListener('keyup', function(){
+                searchQuery = searchBar.value;
+                if(searchQuery.length >= 3){
+                    Model.fetchAutoComplete(searchQuery)
+                }
+            });
         },
 
         bindJobCategoryEventListeners: function(){
@@ -204,6 +219,16 @@ const Controller = (function (){
                 category.addEventListener('click', function(){
                     let categoryId = this.dataset.id;
                     Model.fetchBasedOnSearch('yrkesomradeid', categoryId);
+                });
+            }
+        },
+
+        bindProfessionEventListeners: function(){
+            const jobProfessions = document.querySelectorAll('.job-profession');
+            for(let profession of jobProfessions){
+                profession.addEventListener('click', function(){
+                    let professionId = this.dataset.id;
+                    Model.fetchBasedOnSearch('yrkesid', professionId);
                 });
             }
         },
@@ -267,7 +292,9 @@ const Controller = (function (){
             window.addEventListener('hashchange', event => {
                 Model.fetchBasedOnUrl();
             });
-        }
+        },
+
+
     }
 }());
 
@@ -406,6 +433,27 @@ const View = (function(){
 
         emptyNumberOfJobsContainer: function(){
             numberOfJobsContainer.innerHTML = '';
+        },
+
+        displayAutoCompleteResults: function(results){            
+            const searchResultsList = document.getElementById('searchResults');
+            searchResultsList.innerHTML = '';
+
+            let resultListElements = '';
+            results = results.soklista.sokdata;
+            
+            if (results !== undefined){
+
+                for (result of results){
+                    resultListElements += `
+                    <li class="job-profession" data-id="${result.id}">${result.namn}</li>`;
+                }
+                searchResultsList.innerHTML = resultListElements;
+                Controller.bindProfessionEventListeners();
+
+            } else{
+                searchResultsList.innerHTML = '';
+            }
         }
      }
 }());
