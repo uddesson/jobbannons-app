@@ -89,12 +89,11 @@ const Model = (function(){
             } else {
                 Model.handleAllJobs();
             }
-            
         },
 
-        fetchBasedOnSearch: function(searchQuery){
+        fetchBasedOnSearch: function(typeOfSearch, searchQuery){
             searchState = true;
-            jobs.additionalUrlParameters = `matchning?nyckelord=${searchQuery}`;
+            jobs.additionalUrlParameters = `matchning?${typeOfSearch}=${searchQuery}`;
             Model.handleAllJobs(); 
         },
         
@@ -193,7 +192,7 @@ const Controller = (function (){
                     alert('Du måste fylla i sökfältet');
                 }
                 else{
-                    Model.fetchBasedOnSearch(searchQuery);
+                    Model.fetchBasedOnSearch('nyckelord', searchQuery);
                 }
             });
         },
@@ -204,8 +203,7 @@ const Controller = (function (){
             for(let category of jobCategories){
                 category.addEventListener('click', function(){
                     let categoryId = this.dataset.id;
-                    jobs.additionalUrlParameters = `matchning?yrkesomradeid=${categoryId}`;
-                    Model.handleAllJobs();
+                    Model.fetchBasedOnSearch('yrkesomradeid', categoryId);
                 });
             }
         },
@@ -411,6 +409,10 @@ const View = (function(){
         }
      }
 }());
+
+/***********************
+ *** Function Calls  ***
+ ***********************/
 
 Model.handleAllCountys();
 Controller.checkCurrentUrl();
