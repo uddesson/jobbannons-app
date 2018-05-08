@@ -216,6 +216,8 @@ const Controller = (function (){
                 searchQuery = searchBar.value;
                 if(searchQuery.length >= 3){
                     Model.fetchAutoComplete(searchQuery)
+                } else {
+                    View.emptyAutoCompleteResults();
                 }
             });
         },
@@ -310,6 +312,7 @@ const View = (function(){
     const numberOfJobsContainer = document.getElementById('numberOfJobs');
     const paginationDiv = document.getElementById('pagination');
     const jobCategoriesDiv = document.getElementById('jobCategories');
+    const searchResultsList = document.getElementById('searchResults');
 
      return{
         displayJobs: function(jobs) {
@@ -449,9 +452,12 @@ const View = (function(){
             numberOfJobsContainer.innerHTML = '';
         },
 
-        displayAutoCompleteResults: function(results){
-            const searchResultsList = document.getElementById('searchResults');
+        emptyAutoCompleteResults: function(){
             searchResultsList.innerHTML = '';
+        },
+
+        displayAutoCompleteResults: function(results){
+            View.emptyAutoCompleteResults();
 
             let resultListElements = '';
             results = results.soklista.sokdata;
@@ -468,7 +474,7 @@ const View = (function(){
                 Controller.bindProfessionEventListeners();
 
             } else {
-                searchResultsList.innerHTML = '';
+                View.emptyAutoCompleteResults();
             }
         }
      }
