@@ -19,20 +19,20 @@ header{
     margin: 0px;
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: top; 
+    background-position: top;
     padding: 40px 0 20px 0;
     margin-bottom: 20px;
 
     h1, p{
         color: white;
     }
-    
+
     h1:hover{
         cursor: pointer;
     }
 }
 
-.job-profession {
+.job-profession{
     padding: 6px;
     margin: 4px 2px;
     font-size: 0.9em;
@@ -41,7 +41,7 @@ header{
         cursor: pointer;
         background-color: darken($lightgrey, 10%);
     }
-}    
+}
 
 
 .statistics-text{
@@ -53,7 +53,7 @@ header{
     padding-top: 20px;
 }
 
-.job-category {
+.job-category{
     &:hover {
         background-color: darken(white, 10%);
     }
@@ -82,7 +82,7 @@ select{
 }
 
 /******************************
-Customizing Bootstrap-components 
+Customizing Bootstrap-components
 *******************************/
 
 .card{
@@ -108,7 +108,7 @@ Customizing Bootstrap-components
     width: 100%;
 }
 
-.list-group-item{ 
+.list-group-item{
     &:hover{
         cursor: pointer;
     }

@@ -31,13 +31,13 @@ const Model = (function(){
                 View.displayPagination();
                 Controller.bindPaginationEventListeners();
                 View.displayNumberOfJobs(jobs);
-                
+
                 if(searchState){
                     View.emptyNumberOfJobsContainer();
                 }
             });
         },
-        
+
         handleSingleJob: function(id){
             jobs.fetchOne(id)
             .then(job => {
@@ -69,14 +69,14 @@ const Model = (function(){
             localStorage.setItem('myAds', JSON.stringify(myAds));
         },
 
-        getLocallyStoredAds: function(){ 
+        getLocallyStoredAds: function(){
             var storedAds = localStorage.getItem('myAds');
-        
+
             if (storedAds === null){
                 //Define an empty array, otherwise the user won't be able to push anything into it
                 return [];
             } else {
-                return JSON.parse(storedAds); 
+                return JSON.parse(storedAds);
             }
         },
 
@@ -94,7 +94,7 @@ const Model = (function(){
         fetchBasedOnSearch: function(typeOfSearch, searchQuery){
             searchState = true;
             jobs.additionalUrlParameters = `matchning?${typeOfSearch}=${searchQuery}`;
-            Model.handleAllJobs(); 
+            Model.handleAllJobs();
         },
 
         fetchAutoComplete: function(searchQuery){
@@ -104,9 +104,9 @@ const Model = (function(){
                 View.displayAutoCompleteResults(results);
             });
         },
-        
+
         returnSelectLists: function(){
-            // Returns users selected values and recurring state     
+            // Returns users selected values and recurring state
             const showJobsInCounty = document.getElementById('showJobsInCounty');
             const showNumberOfJobs = document.getElementById('showNumberOfJobs');
             let selectedCounty = showJobsInCounty[showJobsInCounty.selectedIndex].value;
@@ -135,17 +135,17 @@ const Model = (function(){
         changePage: function(state, searchQuery){
             const selectedNumber = Model.returnSelectLists()[2];
             const noCountyIsSelected = Model.returnSelectLists()[3];
-            
+
             if(state === 'next'){
                 pageNumber ++;
             }
             if(state === 'previous' && pageNumber > 1){
                 pageNumber --;
             }
-            
+
             if(searchState){
                 jobs.additionalUrlParameters = `matchning?nyckelord=${searchQuery}&antalrader=${selectedNumber}&sida=${pageNumber}`;
-            } 
+            }
             else if(noCountyIsSelected) {
                 jobs.additionalUrlParameters = `matchning?nyckelord=sverige&antalrader=${selectedNumber}&sida=${pageNumber}`;  
             }
@@ -154,12 +154,12 @@ const Model = (function(){
                 jobs.additionalUrlParameters = `matchning?lanid=${selectedCounty}&antalrader=${selectedNumber}&sida=${pageNumber}`;
             }
 
-            Model.handleAllJobs();   
+            Model.handleAllJobs();
         }
     }
 }());
 
-const Controller = (function (){ 
+const Controller = (function (){
     let searchQuery = '';
 
     return {
@@ -176,7 +176,7 @@ const Controller = (function (){
             });
 
             displaySavedAdsHeading.addEventListener('click', function(){
-                let myAds = Model.getLocallyStoredAds();  
+                let myAds = Model.getLocallyStoredAds();
                 View.displaySavedAds(myAds);
 
                 let savedAdsListElements = savedAdsList.childNodes;
@@ -189,7 +189,7 @@ const Controller = (function (){
                     })
                 }
             });
-          
+
             showJobsButton.addEventListener('click', function(event){
                 event.preventDefault();
                 Model.setCustomFetchPath();
@@ -197,10 +197,10 @@ const Controller = (function (){
             });
 
             searchButton.addEventListener('click', function(event){
-                
+
                 event.preventDefault();
                 searchQuery = searchBar.value;
-                
+
                 if(searchQuery.trim() === ''){
                     alert('Du måste fylla i sökfältet');
                 }
@@ -241,7 +241,7 @@ const Controller = (function (){
         bindJobAdEventListeners: function(){
             const allButtons = document.querySelectorAll('button');
             for(button of allButtons){
-                
+
                 if(button.classList.contains('showJobAd')){
                     let adID = button.dataset.id;
                     button.addEventListener('click', function(){
@@ -256,14 +256,13 @@ const Controller = (function (){
                         title: adTitle,
                         id: adID
                     }
-                    button.addEventListener('click', function(){                       
+                    button.addEventListener('click', function(){
                         let myAds = Model.getLocallyStoredAds();
-                        myAds.push(adToSave);           
+                        myAds.push(adToSave);
                         Model.storeAdsInLocalStorage(myAds);
                     });
                 }
             }
-            
         },
 
         bindSingleJobPageEventListeners: function(){
@@ -292,7 +291,7 @@ const Controller = (function (){
                 window.scrollTo(0, 0);
             });
         },
-        
+
         checkCurrentUrl: function () {
             window.addEventListener('hashchange', event => {
                 Model.fetchBasedOnUrl();
@@ -308,11 +307,11 @@ const View = (function(){
     const jobCategoriesDiv = document.getElementById('jobCategories');
 
      return {
-        
+
         displayJobs: function(jobs) {
             jobs = jobs.matchningslista.matchningdata;
             let jobInfo = '';
-            
+
             for(let job of jobs){
                 jobInfo += `
                 <div class="col-12">
@@ -346,7 +345,7 @@ const View = (function(){
                 location = jobs.matchningslista.matchningdata[0].lan;
             }
 
-            jobInfo = `<h2>Just nu finns ${totalJobs} 
+            jobInfo = `<h2>Just nu finns ${totalJobs}
             jobbannonser i ${location}</h2>`;
             numberOfJobsContainer.innerHTML = jobInfo;
         },
@@ -371,7 +370,7 @@ const View = (function(){
 
         displayCountyOptions: function(countys){
             const showJobsInCounty = Model.returnSelectLists()[0];
-            
+
             for(let county of countys.soklista.sokdata) {
                 let countyOption = document.createElement('option');
                 countyOption.innerText = county.namn;
@@ -380,7 +379,7 @@ const View = (function(){
                 showJobsInCounty.appendChild(countyOption);
             }
         },
-        
+
         displaySavedAds: function(myAds){
             let savedAdsList = document.getElementById('savedAdsList');
             savedAdsList.innerHTML = '';
@@ -401,7 +400,7 @@ const View = (function(){
             element.classList.toggle('hidden');
         },
 
-        displayPagination: function(){   
+        displayPagination: function(){
             paginationDiv.innerHTML = '';
 
             const nextPage = document.createElement('button');
@@ -416,7 +415,7 @@ const View = (function(){
 
             nextPage.innerText = 'Nästa';
             previousPage.innerText = 'Föregående';
-            
+
             paginationDiv.appendChild(previousPage);
             paginationDiv.appendChild(nextPage);
         },
@@ -424,9 +423,9 @@ const View = (function(){
         displayJobCategories: function(categories){
             let categoryList = '';
 
-            for(let category of categories.soklista.sokdata){ 
+            for(let category of categories.soklista.sokdata){
                 categoryList += `<li class="job-category list-group-item d-flex justify-content-between align-items-center" 
-                data-id="${category.id}">${category.namn} 
+                data-id="${category.id}">${category.namn}
                 <span class="badge badge-primary badge-pill">${category.antal_ledigajobb}</span>
                 </li>`;
             }
@@ -438,13 +437,13 @@ const View = (function(){
             numberOfJobsContainer.innerHTML = '';
         },
 
-        displayAutoCompleteResults: function(results){            
+        displayAutoCompleteResults: function(results){
             const searchResultsList = document.getElementById('searchResults');
             searchResultsList.innerHTML = '';
 
             let resultListElements = '';
             results = results.soklista.sokdata;
-            
+
             if (results !== undefined){
 
                 for (result of results){
