@@ -439,7 +439,7 @@ const View = (function(){
                 `<li class="job-category list-group-item d-flex justify-content-between
                 align-items-center" data-id="${category.id}">
                     ${category.namn}
-                    <span class="badge badge-primary badge-pill">
+                    <span class="badge badge-success badge-pill">
                         ${category.antal_ledigajobb}
                     </span>
                 </li>`;
