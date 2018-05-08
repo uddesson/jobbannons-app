@@ -53,12 +53,6 @@ header{
     padding-top: 20px;
 }
 
-.job-category{
-    &:hover {
-        background-color: darken(white, 10%);
-    }
-}
-
 .single-job-container{
     padding: 0 15px 0 15px;
 }
@@ -108,10 +102,9 @@ Customizing Bootstrap-components
     width: 100%;
 }
 
-.list-group-item{
-    &:hover{
-        cursor: pointer;
-    }
+.list-group-item:hover{
+    cursor: pointer;
+    background-color: darken(white, 10%);
 }
 
 /***************************

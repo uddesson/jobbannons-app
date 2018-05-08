@@ -1,5 +1,4 @@
-/* eslint-disable */
-class Fetch {
+class Fetch{
     constructor(additionalUrlParameters){
         this.baseUrl = 'http://api.arbetsformedlingen.se/af/v0/platsannonser/';
         this.additionalUrlParameters = additionalUrlParameters;
@@ -20,20 +19,21 @@ const Model = (function(){
     let pageNumber = 1; // Default value for pagination
     let searchState = false; // Default value, view differs when set to true (user is searching)
 
-    return {
+    return{
         handleAllJobs: function(){
-
             jobs.fetchAll()
+
             .then(jobs => {
                 window.location.hash = `sida=${pageNumber}`;
-
                 View.displayJobs(jobs);
-                Controller.bindJobAdEventListeners();
+                View.displayNumberOfJobs(jobs);
                 View.displayPagination();
                 Controller.bindPaginationEventListeners();
-                View.displayNumberOfJobs(jobs);
+                Controller.bindJobAdEventListeners();
 
                 if(searchState){
+                    /* Total number of jobs should not be displayed
+                    when user is searching */
                     View.emptyNumberOfJobsContainer();
                 }
             });
@@ -41,6 +41,7 @@ const Model = (function(){
 
         handleSingleJob: function(id){
             jobs.fetchOne(id)
+
             .then(job => {
                 location.hash = `/annonsid/${id}`;
                 View.emptyNumberOfJobsContainer();
@@ -52,6 +53,7 @@ const Model = (function(){
         handleAllCounties: function(){
             const countyFetch = new Fetch('soklista/lan')
             countyFetch.fetchAll()
+
             .then((counties) => {
                 View.displayCountyOptions(counties);
             })
@@ -60,6 +62,7 @@ const Model = (function(){
         handleAllJobCategories: function(){
             const categoriesFetch = new Fetch('soklista/yrkesomraden');
             categoriesFetch.fetchAll()
+
             .then((categories) => {
                 View.displayJobCategories(categories);
                 Controller.bindJobCategoryEventListeners();
@@ -71,7 +74,7 @@ const Model = (function(){
         },
 
         getLocallyStoredAds: function(){
-            var storedAds = localStorage.getItem('myAds');
+            let storedAds = localStorage.getItem('myAds');
 
             if (storedAds === null){
                 //Define an empty array, otherwise the user won't be able to push anything into it
@@ -82,7 +85,7 @@ const Model = (function(){
         },
 
         fetchBasedOnUrl: function(){
-            // TODO: Make this function accept several kinds of url-endpoints
+            // Takes the id from currently visited job-ad
             const jobAdId = window.location.hash.split(`/`).pop();
 
             if (window.location.hash.includes(`#/annonsid`)) {
@@ -99,6 +102,7 @@ const Model = (function(){
         },
 
         fetchAutoComplete: function(searchQuery){
+            // Fetch the autocompleted search query
             const autoCompleteFetch = new Fetch(`soklista/yrken/${searchQuery}`)
             autoCompleteFetch.fetchAll()
             .then((results) => {
@@ -183,7 +187,7 @@ const Controller = (function (){
                 let savedAdsListElements = savedAdsList.childNodes;
                 let range = savedAdsList.childNodes.length;
 
-                for(var i = 0; i < range; i++){
+                for(let i = 0; i < range; i++){
                     savedAdsListElements[i].addEventListener('click', function(){
                         Model.handleSingleJob(this.dataset.id);
                         window.scrollTo(0, 0);
@@ -198,14 +202,12 @@ const Controller = (function (){
             });
 
             searchButton.addEventListener('click', function(event){
-
                 event.preventDefault();
                 searchQuery = searchBar.value;
 
-                if(searchQuery.trim() === ''){
+                if (searchQuery.trim() === ''){
                     alert('Du måste fylla i sökfältet');
-                }
-                else{
+                } else {
                     Model.fetchBasedOnSearch('nyckelord', searchQuery);
                 }
             });
@@ -231,6 +233,7 @@ const Controller = (function (){
 
         bindProfessionEventListeners: function(){
             const jobProfessions = document.querySelectorAll('.job-profession');
+
             for(let profession of jobProfessions){
                 profession.addEventListener('click', function(){
                     let professionId = this.dataset.id;
@@ -257,6 +260,7 @@ const Controller = (function (){
                         title: adTitle,
                         id: adID
                     }
+
                     button.addEventListener('click', function(){
                         let myAds = Model.getLocallyStoredAds();
                         myAds.push(adToSave);
@@ -282,19 +286,19 @@ const Controller = (function (){
             const nextPage = document.getElementById('nextPage');
             const previousPage = document.getElementById('previousPage');
 
-            nextPage.addEventListener('click', () => {
+            nextPage.addEventListener('click', function(){
                 Model.changePage('next',searchQuery);
                 window.scrollTo(0, 0);
             });
 
-            previousPage.addEventListener('click', () => {
+            previousPage.addEventListener('click', function(){
                 Model.changePage('previous',searchQuery);
                 window.scrollTo(0, 0);
             });
         },
 
         checkCurrentUrl: function () {
-            window.addEventListener('hashchange', event => {
+            window.addEventListener('hashchange', function(event){
                 Model.fetchBasedOnUrl();
             });
         }
@@ -307,8 +311,7 @@ const View = (function(){
     const paginationDiv = document.getElementById('pagination');
     const jobCategoriesDiv = document.getElementById('jobCategories');
 
-     return {
-
+     return{
         displayJobs: function(jobs) {
             jobs = jobs.matchningslista.matchningdata;
             let jobInfo = '';
@@ -324,7 +327,8 @@ const View = (function(){
                             <p class="card-text">Sista ansökningsdag: ${job.sista_ansokningsdag}</p>
                             <p class="card-text">Yrkesroll: ${job.yrkesbenamning}</p>
                             <p class="card-text">Anställningstyp: ${job.anstallningstyp}</p>
-                            <button class="saveJobAd btn btn-primary" data-id="${job.annonsid}" data-title="${job.annonsrubrik}">Spara annons</button>
+                            <button class="saveJobAd btn btn-primary" data-id="${job.annonsid}"
+                            data-title="${job.annonsrubrik}">Spara annons</button>
                             <button class="showJobAd btn btn-primary" data-id="${job.annonsid}">Visa annons</button>
                             <br><a href="${job.annonsurl}" class="card-link">Länk till arbetsförmedlingen</a>
                         </div>
@@ -357,13 +361,16 @@ const View = (function(){
             const jobUrl = window.location.href;
 
             let jobInfo = '';
-                jobInfo += `<div id="${job.annons.annonsid}" class="single-job-container">
-                <button id="returnButton" class="btn btn-sm btn-outline-primary">Tillbaka</button>
-                <h2>${job.annons.annonsrubrik}</h2>
-                <h3>Kommun: ${job.annons.kommunnamn}</h3>
-                <p>${job.annons.annonstext.replace(/(\r\n|\n|\r)/gm, '<br />')}</p>
-                <button id="shareButton" class="btn btn-primary">Dela annons</button>
-                <div id="linkContainer" class="hidden">Länk till annons: <a href="${jobUrl}">${jobUrl}</a></div>
+                jobInfo +=
+                `<div id="${job.annons.annonsid}" class="single-job-container">
+                    <button id="returnButton" class="btn btn-sm btn-outline-primary">Tillbaka</button>
+                    <h2>${job.annons.annonsrubrik}</h2>
+                    <h3>Kommun: ${job.annons.kommunnamn}</h3>
+                    <p>${job.annons.annonstext.replace(/(\r\n|\n|\r)/gm, '<br />')}</p>
+                    <button id="shareButton" class="btn btn-primary">Dela annons</button>
+                    <div id="linkContainer" class="hidden">Länk till annons:
+                        <a href="${jobUrl}">${jobUrl}</a>
+                    </div>
                 </div>`;
 
             container.innerHTML = jobInfo;
@@ -385,7 +392,7 @@ const View = (function(){
             let savedAdsList = document.getElementById('savedAdsList');
             savedAdsList.innerHTML = '';
 
-            for (var ad of myAds){
+            for (let ad of myAds){
                 let listElement = document.createElement('li');
                 listElement.dataset.id = ad.id;
                 listElement.classList.add('list-group-item','d-flex','align-items-center')
@@ -425,9 +432,13 @@ const View = (function(){
             let categoryList = '';
 
             for(let category of categories.soklista.sokdata){
-                categoryList += `<li class="job-category list-group-item d-flex justify-content-between align-items-center" 
-                data-id="${category.id}">${category.namn}
-                <span class="badge badge-primary badge-pill">${category.antal_ledigajobb}</span>
+                categoryList +=
+                `<li class="job-category list-group-item d-flex justify-content-between
+                align-items-center" data-id="${category.id}">
+                    ${category.namn}
+                    <span class="badge badge-primary badge-pill">
+                        ${category.antal_ledigajobb}
+                    </span>
                 </li>`;
             }
 
@@ -448,13 +459,15 @@ const View = (function(){
             if (results !== undefined){
 
                 for (result of results){
-                    resultListElements += `
-                    <a class="job-profession badge badge-light" data-id="${result.id}">${result.namn}</a>`;
+                    resultListElements +=
+                    `<a class="job-profession badge badge-light" data-id="${result.id}">
+                        ${result.namn}
+                    </a>`;
                 }
                 searchResultsList.innerHTML = resultListElements;
                 Controller.bindProfessionEventListeners();
 
-            } else{
+            } else {
                 searchResultsList.innerHTML = '';
             }
         }
@@ -466,7 +479,7 @@ const View = (function(){
  ***********************/
 
 Model.handleAllCounties();
-Controller.checkCurrentUrl();
 Model.fetchBasedOnUrl();
 Model.handleAllJobCategories();
+Controller.checkCurrentUrl();
 Controller.bindHomePageEventListeners();
