@@ -1,3 +1,4 @@
+/* eslint-disable */
 class Fetch {
     constructor(additionalUrlParameters){
         this.baseUrl = 'http://api.arbetsformedlingen.se/af/v0/platsannonser/';
@@ -48,11 +49,11 @@ const Model = (function(){
             });
         },
 
-        handleAllCountys: function(){
+        handleAllCounties: function(){
             const countyFetch = new Fetch('soklista/lan')
             countyFetch.fetchAll()
-            .then((countys) => {
-                View.displayCountyOptions(countys);
+            .then((counties) => {
+                View.displayCountyOptions(counties);
             })
         },
 
@@ -368,10 +369,10 @@ const View = (function(){
             container.innerHTML = jobInfo;
         },
 
-        displayCountyOptions: function(countys){
+        displayCountyOptions: function(counties){
             const showJobsInCounty = Model.returnSelectLists()[0];
 
-            for(let county of countys.soklista.sokdata) {
+            for(let county of counties.soklista.sokdata) {
                 let countyOption = document.createElement('option');
                 countyOption.innerText = county.namn;
                 countyOption.value = county.id;
@@ -464,7 +465,7 @@ const View = (function(){
  *** Function Calls  ***
  ***********************/
 
-Model.handleAllCountys();
+Model.handleAllCounties();
 Controller.checkCurrentUrl();
 Model.fetchBasedOnUrl();
 Model.handleAllJobCategories();
